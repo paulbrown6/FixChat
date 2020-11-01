@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1096529144727",
+    "firebase_url": "https://fixchat-bf87f.firebaseio.com",
+    "project_id": "fixchat-bf87f",
+    "storage_bucket": "fixchat-bf87f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1096529144727:android:32926b096ecdddcfcdb2d2",
+        "android_client_info": {
+          "package_name": "com.pb.app.fixchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1096529144727-o8v7s77pndtu7f1o54ujps2nosmkvjgd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pb.app.fixchat",
+            "certificate_hash": "26dd14254667a5de9726872cc7c044f947ff6ff3"
+          }
+        },
+        {
+          "client_id": "1096529144727-9d3dru3vllfhm494s46apkip88thtr85.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUumVAmwV8wLxzh689c13mdK-pgv_yZy8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1096529144727-9d3dru3vllfhm494s46apkip88thtr85.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
