@@ -5,6 +5,7 @@ import android.app.Activity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -23,17 +24,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pb.app.fixchat.R;
-import com.pb.app.fixchat.ui.login.LoginViewModel;
-import com.pb.app.fixchat.ui.login.LoginViewModelFactory;
+import com.pb.app.fixchat.ui.HomeActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
+    private Intent intent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        intent = new Intent(LoginActivity.this, HomeActivity.class);
         loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
@@ -61,19 +63,18 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
             @Override
             public void onChanged(@Nullable LoginResult loginResult) {
-                if (loginResult == null) {
-                    return;
-                }
-                loadingProgressBar.setVisibility(View.GONE);
-                if (loginResult.getError() != null) {
-                    showLoginFailed(loginResult.getError());
-                }
-                if (loginResult.getSuccess() != null) {
-                    updateUiWithUser(loginResult.getSuccess());
-                }
+//                if (loginResult == null) {
+//                    return;
+//                }
+//                loadingProgressBar.setVisibility(View.GONE);
+//                if (loginResult.getError() != null) {
+//                    showLoginFailed(loginResult.getError());
+//                }
+//                if (loginResult.getSuccess() != null) {
+//                    updateUiWithUser(loginResult.getSuccess());
+//                }
+                startActivity(intent);
                 setResult(Activity.RESULT_OK);
-
-                //Complete and destroy login activity once successful
                 finish();
             }
         });
