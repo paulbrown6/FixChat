@@ -2,6 +2,7 @@ package com.pb.app.fixchat.ui.login;
 
 import android.app.Activity;
 
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -24,12 +25,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pb.app.fixchat.R;
+import com.pb.app.fixchat.data.database.DatabaseSQL;
 import com.pb.app.fixchat.ui.HomeActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
     private Intent intent;
+    private static LifecycleOwner lifecycleOwner;
+    private Button loginButton;
+    private EditText usernameEditText;
+    private EditText passwordEditText;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,10 +47,11 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
-        final EditText usernameEditText = findViewById(R.id.username);
-        final EditText passwordEditText = findViewById(R.id.password);
-        final Button loginButton = findViewById(R.id.login);
+        usernameEditText = findViewById(R.id.username);
+        passwordEditText = findViewById(R.id.password);
+        loginButton = findViewById(R.id.login);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
+        lifecycleOwner = this;
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
@@ -63,19 +72,23 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
             @Override
             public void onChanged(@Nullable LoginResult loginResult) {
-//                if (loginResult == null) {
-//                    return;
-//                }
-//                loadingProgressBar.setVisibility(View.GONE);
-//                if (loginResult.getError() != null) {
-//                    showLoginFailed(loginResult.getError());
-//                }
-//                if (loginResult.getSuccess() != null) {
-//                    updateUiWithUser(loginResult.getSuccess());
-//                }
-                startActivity(intent);
-                setResult(Activity.RESULT_OK);
-                finish();
+                if (loginResult == null) {
+                    setLock(true);
+                    return;
+                }
+                loadingProgressBar.setVisibility(View.GONE);
+                if (loginResult.getError() != null) {
+                    showLoginFailed(loginResult.getError());
+                    setLock(true);
+                }
+                if (loginResult.getSuccess() != null) {
+                    updateUiWithUser(loginResult.getSuccess());
+                    DatabaseSQL.getInstance().readTokenToDb(getApplicationContext(), loginResult.getSuccess().getRefToken());
+                    intent.putExtra("role", loginResult.getSuccess().getRole());
+                    startActivity(intent);
+                    setResult(Activity.RESULT_OK);
+                    finish();
+                }
             }
         });
 
@@ -98,24 +111,25 @@ public class LoginActivity extends AppCompatActivity {
         };
         usernameEditText.addTextChangedListener(afterTextChangedListener);
         passwordEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    loginViewModel.login(usernameEditText.getText().toString(),
-                            passwordEditText.getText().toString());
-                }
-                return false;
-            }
-        });
+//        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//
+//            @Override
+//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                if (actionId == EditorInfo.IME_ACTION_DONE) {
+//                    loginViewModel.login(lifecycleOwner, usernameEditText.getText().toString(),
+//                            passwordEditText.getText().toString());
+//                }
+//                return false;
+//            }
+//        });
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.login(usernameEditText.getText().toString(),
+                loginViewModel.login(lifecycleOwner, usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
+                setLock(false);
             }
         });
     }
@@ -128,5 +142,11 @@ public class LoginActivity extends AppCompatActivity {
 
     private void showLoginFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+    }
+
+    private void setLock(Boolean bool){
+        loginButton.setEnabled(bool);
+        usernameEditText.setEnabled(bool);
+        passwordEditText.setEnabled(bool);
     }
 }

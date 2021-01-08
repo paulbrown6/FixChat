@@ -6,18 +6,18 @@ package com.pb.app.fixchat.data.model;
 public class LoggedInUser {
 
     private String userId;
-    private String displayName;
+    private Integer displayName;
 
-    public LoggedInUser(String userId, String displayName) {
-        this.userId = userId;
-        this.displayName = displayName;
+    public LoggedInUser(String token, Integer role) {
+        this.userId = token;
+        this.displayName = role;
     }
 
-    public String getUserId() {
+    public String getToken() {
         return userId;
     }
 
-    public String getDisplayName() {
+    public Integer getRole() {
         return displayName;
     }
 }

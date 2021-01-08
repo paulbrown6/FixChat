@@ -13,11 +13,12 @@
     <string name="title_activity_login">@string/app_name</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">"Welcome!"</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="welcome">"Welcome, "</string>
+    <!--    <string name="invalid_username">Not a valid username</string>-->
+    <string name="invalid_username">Login must be >3 characters</string>
+    <string name="invalid_password">Password must be >3 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="title_activity_home">HomeActivity</string>
 
@@ -41,4 +42,7 @@
     <string name="name_server">Server</string>
     <string name="network">Network</string>
     <string name="connection">Сonnection</string>
+    <string name="title_activity_start">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

@@ -12,14 +12,15 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pb.app.fixchat.R;
+import com.pb.app.fixchat.api.entity.Server;
 
 import java.util.List;
 
 public class AdapterContent extends RecyclerView.Adapter<com.pb.app.fixchat.ui.adapters.AdapterContent.ViewHolder> {
 
-    private List<String> contents;
+    private List<Server> contents;
 
-    public AdapterContent(List<String> contents) {
+    public AdapterContent(List<Server> contents) {
         this.contents = contents;
     }
 
@@ -31,9 +32,8 @@ public class AdapterContent extends RecyclerView.Adapter<com.pb.app.fixchat.ui.a
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final String post = contents.get(position);
+        final String post = contents.get(position).getName();
         holder.name.setText(post);
-        holder.network.setChecked(true);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class AdapterContent extends RecyclerView.Adapter<com.pb.app.fixchat.ui.a
         return contents.size();
     }
 
-    public void setItems(List<String> prod) {
+    public void setItems(List<Server> prod) {
         contents.clear();
         contents.addAll(prod);
         notifyDataSetChanged();
@@ -51,14 +51,10 @@ public class AdapterContent extends RecyclerView.Adapter<com.pb.app.fixchat.ui.a
 
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView name;
-        Switch network;
-        Switch connection;
 
         public ViewHolder(View itemView) {
             super(itemView);
             name = (TextView) itemView.findViewById(R.id.name_server);
-            network = (Switch) itemView.findViewById(R.id.network_switch);
-            connection = (Switch) itemView.findViewById(R.id.connection_swicth);
         }
     }
 }

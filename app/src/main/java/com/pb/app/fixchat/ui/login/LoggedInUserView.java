@@ -5,13 +5,31 @@ package com.pb.app.fixchat.ui.login;
  */
 class LoggedInUserView {
     private String displayName;
-    //... other data fields that may be accessible to the UI
+    private String refToken;
+    private Integer role;
 
-    LoggedInUserView(String displayName) {
-        this.displayName = displayName;
+    LoggedInUserView(Integer role) {
+        this.role = role;
+        if (role == 1){
+            displayName = "Администратор";
+        } else {
+            displayName = "Пользователь";
+        }
     }
 
     String getDisplayName() {
         return displayName;
+    }
+
+    Integer getRole(){
+        return role;
+    }
+
+    public String getRefToken() {
+        return refToken;
+    }
+
+    public void setRefToken(String refToken) {
+        this.refToken = refToken;
     }
 }
