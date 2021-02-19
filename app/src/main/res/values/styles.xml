@@ -1,14 +1,14 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">#E5E5E5</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="itemTextColor">@color/colorButton</item>
+        <item name="itemIconTint">@color/colorButton</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColor">@color/black</item>
-        <item name="homeAsUpIndicator">@drawable/ic_launcher_foreground</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
-        <item name="android:buttonStyleToggle">@style/Widget.Button.Toggle</item>
     </style>
 
     <style name="DrawerArrowStyle" parent="@style/Widget.AppCompat.DrawerArrowToggle">
@@ -29,10 +29,12 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
-    <style name="Widget.Button.Toggle" parent="android:Widget">
-        <item name="android:background">@drawable/button_toggle_background</item>
-        <item name="android:textOn">ON</item>
-        <item name="android:textOff">OFF</item>
-        <item name="android:disabledAlpha">?android:attr/disabledAlpha</item>
+    <style name="AlertDialogCustom" parent="@android:style/Theme.DeviceDefault.Dialog.Alert" tools:targetApi="lollipop_mr1">
+        <item name="android:colorBackground">@color/colorNotVisible</item>
+    </style>
+
+    <style name="MySwitch" parent="Theme.AppCompat.Light">
+        <item name="android:track">@drawable/button_switch</item>
+        <item name="android:thumb">@drawable/ellipse_switch</item>
     </style>
 </resources>

@@ -39,4 +39,13 @@ public class UsersEntity {
     public void setError(String error) {
         this.error = error;
     }
+
+    @Override
+    public String toString() {
+        return "UsersEntity{" +
+                "servers='" + users + '\'' +
+                ", ok=" + ok +
+                ", error='" + error + '\'' +
+                '}';
+    }
 }

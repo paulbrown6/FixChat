@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/fui_transparent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="12dp"
+        android:background="@drawable/background_servers">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="15dp"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerInParent="true"
+                        android:fontFamily="@font/roboto"
+                        android:text="Состояние"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <com.kyleduo.switchbutton.SwitchButton
+                        android:id="@+id/user_switch_power"
+                        style="@style/MySwitch"
+                        android:layout_width="46dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerHorizontal="true"
+
+                        android:checked="true"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp"
+                        app:kswBackDrawable="@drawable/button_switch"
+                        app:kswFadeBack="false"
+                        app:kswTextAdjust="1dp"
+                        app:kswTextExtra="5dp"
+                        app:kswTextOff="OFF"
+                        app:kswTextOn="ON"
+                        app:kswTextThumbInset="5dp"
+                        app:kswThumbDrawable="@drawable/ellipse_switch"
+                        app:kswThumbMargin="2dp" />
+
+                    <ProgressBar
+                        android:id="@+id/user_progress_power"
+                        style="@android:style/Widget.DeviceDefault.Light.ProgressBar"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginRight="15dp"
+                        android:visibility="invisible" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/user_name_server"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:fontFamily="@font/roboto"
+                    android:text="@string/name_server"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <RelativeLayout
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerInParent="true"
+                        android:fontFamily="@font/roboto"
+                        android:text="Сеть"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <com.kyleduo.switchbutton.SwitchButton
+                        android:id="@+id/user_switch_web"
+                        style="@style/MySwitch"
+                        android:layout_width="46dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerHorizontal="true"
+
+                        android:checked="false"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp"
+                        app:kswBackDrawable="@drawable/button_switch"
+                        app:kswFadeBack="false"
+                        app:kswTextAdjust="1dp"
+                        app:kswTextExtra="5dp"
+                        app:kswTextOff="OFF"
+                        app:kswTextOn="ON"
+                        app:kswTextThumbInset="5dp"
+                        app:kswThumbDrawable="@drawable/ellipse_switch"
+                        app:kswThumbMargin="2dp" />
+
+                    <ProgressBar
+                        android:id="@+id/user_progress_web"
+                        style="@android:style/Widget.DeviceDefault.Light.ProgressBar"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginRight="15dp"
+                        android:visibility="invisible" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/user_name_host"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="@font/roboto"
+                    android:maxWidth="150dp"
+                    android:text="dc.kmsys.ru:3456"
+                    android:textColor="#AAAAAA"
+                    android:textSize="12sp" />
+
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</FrameLayout>

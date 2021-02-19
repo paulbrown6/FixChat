@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.pb.app.fixchat.api.entity.AuthorisationEntity;
+import com.pb.app.fixchat.api.entity.ResponseEntity;
 import com.pb.app.fixchat.api.entity.Server;
 import com.pb.app.fixchat.api.entity.ServerEntity;
 import com.pb.app.fixchat.api.entity.ServersEntity;
@@ -36,8 +37,9 @@ public class RetrofitCall {
     private final MutableLiveData<ServerEntity> serverData = new MutableLiveData<>();
 
     private static String token;
+    private static Integer role;
 
-    private ServersEntity servers;
+    private ServersEntity allServers;
     private ServersEntity userServers;
     private UsersEntity allUsers;
     private UsersEntity serverUsers;
@@ -48,6 +50,8 @@ public class RetrofitCall {
         if(instance == null) instance = new RetrofitCall();
         return instance;
     }
+
+    // Authorisation
 
     public void authorisation(String email, String password){
         JSONObject jsonObject = new JSONObject();
@@ -64,7 +68,9 @@ public class RetrofitCall {
                 if (response.code() == 200){
                     if (response.body() != null) {
                         token = response.body().getTokenEntity().getToken();
-                        response.body().getTokenEntity().setRole(Integer.parseInt(parsRole(token)));
+                        AuthorisationEntity authorisation = response.body();
+                        role = Integer.parseInt(parsRole(token));
+                        authorisation.getTokenEntity().setRole(role);
                         authorisationData.postValue(response.body());
                     }
                     Log.d("API", "Авторизация: " + response.code() + " || " + response.body().toString() + " || " + response.message());
@@ -92,7 +98,8 @@ public class RetrofitCall {
                     if (response.body() != null) {
                         token = response.body().getTokenEntity().getToken();
                         AuthorisationEntity authorisation = response.body();
-                        authorisation.getTokenEntity().setRole(Integer.parseInt(parsRole(token)));
+                        role = Integer.parseInt(parsRole(token));
+                        authorisation.getTokenEntity().setRole(role);
                         authorisationData.postValue(authorisation);
                     }
                     Log.d("API", "Вход: " + response.code() + " || " + response.body().toString() + " || " + response.message());
@@ -112,14 +119,43 @@ public class RetrofitCall {
         });
     }
 
-    public void getAllServers(){
+    // Servers
+    // Методы для работы из вне
+
+    public void getServers(){
+        if (role == 1){
+            getAdminServers();
+        } else {
+            getUserServers();
+        }
+    }
+
+    public void serverPowerOn(Server server){
+        if (role == 1){
+            adminServerPowerOn();
+        } else {
+            userServerPowerOn(server);
+        }
+    }
+
+    public void serverPowerOff(Server server){
+        if (role == 1){
+            adminServerPowerOff();
+        } else {
+            userServerPowerOff();
+        }
+    }
+
+    // Методы для вызова
+
+    private void getAdminServers(){
         App.getInstance().getApi().getAllServers("Bearer " + token).enqueue(new Callback<ServersEntity>() {
             @Override
             public void onResponse(Call<ServersEntity> call, Response<ServersEntity> response) {
-                servers = new ServersEntity();
+                allServers = new ServersEntity();
                 if (response.body() != null){
-                    servers = response.body();
-                    serversData.postValue(servers);
+                    allServers = response.body();
+                    serversData.postValue(allServers);
                     Log.d("API", "сервера получены " + response.code() + " || " + response.body().toString() + " || " + response.message());
                 } else {
 //                    servers.setServers(new ArrayList<Server>());
@@ -137,17 +173,16 @@ public class RetrofitCall {
         });
     }
 
-    public void getUserServers(){
+    private void getUserServers(){
         App.getInstance().getApi().getUserServers("Bearer " + token).enqueue(new Callback<ServersEntity>() {
             @Override
             public void onResponse(Call<ServersEntity> call, Response<ServersEntity> response) {
-                servers = new ServersEntity();
+                allServers = new ServersEntity();
                 if (response.body() != null){
-                    servers = response.body();
-                    serversData.postValue(servers);
+                    allServers = response.body();
+                    serversData.postValue(allServers);
                     Log.d("API", "сервера получены " + response.code() + " || " + response.body().toString() + " || " + response.message());
                 } else {
-//                    servers.setServers(new ArrayList<Server>());
                     Log.d("API", "сервера не получены" + response.message() + " || код " + response.code());
                     FirebaseCrashlytics.getInstance().log("сервера не получены" + response.message() + " || код " + response.code());
                 }
@@ -160,6 +195,43 @@ public class RetrofitCall {
                 System.out.println(call.toString());
             }
         });
+    }
+
+    private void adminServerPowerOn(){
+
+    }
+
+    private void adminServerPowerOff(){
+
+    }
+
+    private void userServerPowerOn(Server server){
+        App.getInstance().getApi().powerStart("Bearer " + token, server.getId()).enqueue(new Callback<ResponseEntity>() {
+            @Override
+            public void onResponse(Call<ResponseEntity> call, Response<ResponseEntity> response) {
+                allServers = new ServersEntity();
+                if (response.body() != null){
+                    if (response.body().isOk())
+                    serversData.postValue(allServers);
+                    Log.d("API", "сервера получены " + response.code() + " || " + response.body().toString() + " || " + response.message());
+                } else {
+//                    servers.setServers(new ArrayList<Server>());
+                    Log.d("API", "сервера не получены" + response.message() + " || код " + response.code());
+                    FirebaseCrashlytics.getInstance().log("сервера не получены" + response.message() + " || код " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseEntity> call, Throwable t) {
+                Log.d("API", "сервера не получены, ошибка с сервера");
+                System.out.println(t.getMessage());
+                System.out.println(call.toString());
+            }
+        });
+    }
+
+    private void userServerPowerOff(){
+
     }
 
     public void getServer(String id){
@@ -186,6 +258,12 @@ public class RetrofitCall {
             }
         });
     }
+
+    // Users
+
+    // Методы для работы из вне
+
+    // Методы для вызова
 
 //    public void getServerUsers(String id){
 //        App.getInstance().getApi().getServerUsers("Bearer " + token, id).enqueue(new Callback<UsersEntity>() {
@@ -218,15 +296,12 @@ public class RetrofitCall {
             public void onResponse(Call<UsersEntity> call, Response<UsersEntity> response) {
                 if (response.code() == 200){
                     allUsers = new UsersEntity();
-                    if (response.body() == null){
-                        allUsers.setUsers(new ArrayList<User>());
-                    }
-                    else {
+                    Log.d("API", "ответ на пользователей" + response.code() + " || " + response.body().toString() + " || " + response.message());
+                    if (response.body() != null) {
                         allUsers.setUsers(response.body().getUsers());
+                        usersData.setValue(allUsers);
+                        Log.d("API", "пользователи получены " + response.code() + " || " + response.body().toString() + " || " + response.message());
                     }
-                    serversData.setValue(servers);
-//                    productsLiveData.postValue(productsEntity);
-                    Log.d("API", "пользователи получены " + response.code() + " || " + response.body().toString() + " || " + response.message());
                 } else {
                     Log.d("API", "пользователи не получены" + response.message() + " || код " + response.code());
                     FirebaseCrashlytics.getInstance().log("пользователи не получены " + response.code() + " || " + response.body().toString() + " || " + response.message());
@@ -241,6 +316,8 @@ public class RetrofitCall {
         });
     }
 
+    // Callback methods
+
     public LiveData<UsersEntity> getUsersState(){
         return usersData;
     }
@@ -252,6 +329,8 @@ public class RetrofitCall {
     public LiveData<AuthorisationEntity> getAuthorisationState(){
         return authorisationData;
     }
+
+    // Parsing and Decode refresh token
 
     protected String parsRole(String token){
         String s = " ";
@@ -270,5 +349,13 @@ public class RetrofitCall {
     private static String getJson(String strEncoded) throws UnsupportedEncodingException{
         byte[] decodedBytes = Base64.decode(strEncoded, Base64.URL_SAFE);
         return new String(decodedBytes, "UTF-8");
+    }
+
+    public static Integer getRole() {
+        return role;
+    }
+
+    public static void clear(){
+        instance = new RetrofitCall();
     }
 }

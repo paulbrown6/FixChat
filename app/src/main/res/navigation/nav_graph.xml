@@ -12,10 +12,10 @@
         tools:layout="@layout/fragment_servers" >
         <action
             android:id="@+id/action_serversFragment_to_settingsFragment"
-            app:destination="@id/nav_settings" />
+            app:destination="@id/nav_users" />
     </fragment>
     <fragment
-        android:id="@+id/nav_settings"
+        android:id="@+id/nav_users"
         android:name="com.pb.app.fixchat.ui.fragments.users.UsersFragment"
         android:label="@string/menu_users"
         tools:layout="@layout/fragment_users" />

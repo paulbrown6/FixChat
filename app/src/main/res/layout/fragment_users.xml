@@ -6,10 +6,9 @@
     android:background="@color/fui_transparent"
     tools:context=".ui.fragments.users.UsersFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/users_recycle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
-
+        android:layout_marginTop="20dp" />
 </FrameLayout>

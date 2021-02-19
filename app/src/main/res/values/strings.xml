@@ -10,17 +10,31 @@
     <string name="menu_home">Servers</string>
     <string name="title_home">Your servers</string>
     <string name="menu_users">Users</string>
-    <string name="title_activity_login">@string/app_name</string>
+    <string name="title_activity_login">KM Systems Servers</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in</string>
-    <string name="action_sign_in_short">Sign in</string>
+    <string name="action_sign_in">Войти</string>
+    <string name="action_sign_in_short">Войти</string>
     <string name="welcome">"Welcome, "</string>
+    <string name="toggle_on">ON</string>
+    <string name="toggle_off">OFF</string>
+    <string name="toggle_admin">admin</string>
+    <string name="toggle_user">user</string>
+    <string name="name_user">Anaxita</string>
+    <string name="subname_user">creative director</string>
+    <string-array name="settings_type">
+        <item>1. Вкл./выкл. сервер</item>
+        <item>2. Параметры</item>
+        <item>3. Отключить питание</item>
+        <item>4. Добавить пользователя</item>
+        <item>5. Процессы</item>
+    </string-array>
+
     <!--    <string name="invalid_username">Not a valid username</string>-->
     <string name="invalid_username">Login must be >3 characters</string>
     <string name="invalid_password">Password must be >3 characters</string>
     <string name="login_failed">"Login failed"</string>
-    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_home">KM Systems Servers</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <!-- Preference Titles -->
@@ -45,4 +59,7 @@
     <string name="title_activity_start">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="server_power">Power</string>
+    <string name="menu_add">Add</string>
+    <string name="menu_search">Search</string>
 </resources>

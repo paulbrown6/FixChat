@@ -15,24 +15,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 
 import com.pb.app.fixchat.R;
 import com.pb.app.fixchat.api.RetrofitCall;
-import com.pb.app.fixchat.api.entity.AuthorisationEntity;
 import com.pb.app.fixchat.api.entity.ServersEntity;
 import com.pb.app.fixchat.ui.HomeActivity;
-import com.pb.app.fixchat.ui.adapters.AdapterContent;
-
-import java.util.ArrayList;
+import com.pb.app.fixchat.ui.adapters.AdapterAdminServer;
+import com.pb.app.fixchat.ui.adapters.AdapterUserServer;
 
 public class ServersFragment extends Fragment {
 
     private static LifecycleOwner owner;
-
     private ServersViewModel mViewModel;
-    private AdapterContent adapter;
+    private RecyclerView.Adapter adapter;
     private RecyclerView recyclerView;
-    private static Integer role;
 
     public static ServersFragment newInstance() {
         return new ServersFragment();
@@ -44,19 +41,14 @@ public class ServersFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_servers, container, false);
         recyclerView = root.findViewById(R.id.servers_recycle);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        role = HomeActivity.getRole();
         owner = HomeActivity.getOwner();
 
-        if (role == 1){
-            RetrofitCall.getInstance().getAllServers();
-        } else {
-            RetrofitCall.getInstance().getUserServers();
-        }
-
+        RetrofitCall.getInstance().getServers();
         RetrofitCall.getInstance().getServersState().observe(owner, new Observer<ServersEntity>(){
             @Override
             public void onChanged(ServersEntity serversEntity) {
-                adapter = new AdapterContent(serversEntity.getServers());
+                if (RetrofitCall.getRole() == 1) { adapter = new AdapterAdminServer(serversEntity.getServers()); }
+                else {adapter = new AdapterUserServer(serversEntity.getServers());}
                 recyclerView.setAdapter(adapter);
             }
         });

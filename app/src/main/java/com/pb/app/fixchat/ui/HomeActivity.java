@@ -1,19 +1,18 @@
 package com.pb.app.fixchat.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -23,7 +22,9 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.pb.app.fixchat.R;
+import com.pb.app.fixchat.api.RetrofitCall;
 import com.pb.app.fixchat.data.database.DatabaseSQL;
 import com.pb.app.fixchat.ui.fragments.servers.ServersFragment;
 import com.pb.app.fixchat.ui.login.LoginActivity;
@@ -35,19 +36,22 @@ public class HomeActivity extends AppCompatActivity {
     private NavController navController;
     private NavigationView navigationView;
     private FirebaseAnalytics mFirebaseAnalytics;
-    private static Integer role;
     private static LifecycleOwner owner;
+    private ImageButton exit;
+    private TextView toolbarName;
+    private MenuItem searchItem;
+    private MaterialSearchView searchView;
+    private MenuItem addItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        role = getIntent().getExtras().getInt("role");
         owner = this;
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if (role == 1) {
+        if (getIntent().getExtras().getInt("role") == 1) {
             onCreateAdministrator(savedInstanceState);
         } else {
             onCreateUser(savedInstanceState);
@@ -59,7 +63,7 @@ public class HomeActivity extends AppCompatActivity {
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_servers, R.id.nav_settings)
+                R.id.nav_servers, R.id.nav_users)
                 .setOpenableLayout(drawer)
                 .build();
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -69,10 +73,9 @@ public class HomeActivity extends AppCompatActivity {
 
     protected void onCreateUser(Bundle savedInstanceState) {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        final ImageButton exit = findViewById(R.id.button_exit);
-        exit.setVisibility(View.VISIBLE);
-        TextView toolbarName = findViewById(R.id.toolbar_name);
-        toolbarName.setVisibility(View.VISIBLE);
+        exit = findViewById(R.id.button_exit);
+        toolbarName = findViewById(R.id.toolbar_name);
+        visibleToolbarElements(true);
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,6 +86,17 @@ public class HomeActivity extends AppCompatActivity {
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.nav_host_fragment, new ServersFragment());
         transaction.commit();
+    }
+
+    private void visibleToolbarElements(Boolean bool){
+        if (exit == null) return;
+        if (bool) {
+            exit.setVisibility(View.VISIBLE);
+            toolbarName.setVisibility(View.VISIBLE);
+        } else {
+            exit.setVisibility(View.INVISIBLE);
+            toolbarName.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -99,6 +113,12 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
             }
         }
+        if (item.getItemId() == R.id.nav_servers) {
+            addItem.setIcon(R.drawable.ic_add_servers);
+        }
+        if (item.getItemId() == R.id.nav_users) {
+            addItem.setIcon(R.drawable.ic_add_user);
+        }
         return super.onOptionsItemSelected(item);
 
     }
@@ -109,6 +129,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void exit() {
         DatabaseSQL.getInstance().deleteEntityFromDb(getApplicationContext());
+        RetrofitCall.clear();
         startActivity(new Intent(HomeActivity.this, LoginActivity.class));
         finish();
     }
@@ -117,7 +138,38 @@ public class HomeActivity extends AppCompatActivity {
         return owner;
     }
 
-    public static Integer getRole(){
-        return role;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
+
+        addItem = menu.findItem(R.id.add_object);
+        searchItem = menu.findItem(R.id.search);
+        searchView = findViewById(R.id.search_view);
+        searchView.setMenuItem(searchItem);
+        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                //Do some magic
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //Do some magic
+                return false;
+            }
+        });
+        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+                visibleToolbarElements(false);
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+                visibleToolbarElements(true);
+            }
+        });
+        return true;
     }
 }
