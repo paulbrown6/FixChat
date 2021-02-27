@@ -35,6 +35,9 @@ public class RetrofitCall {
     private final MutableLiveData<UserEntity> userData = new MutableLiveData<>();
     private final MutableLiveData<ServersEntity> serversData = new MutableLiveData<>();
     private final MutableLiveData<ServerEntity> serverData = new MutableLiveData<>();
+    private final MutableLiveData<ResponseEntity> serverPower = new MutableLiveData<>();
+    private final MutableLiveData<ResponseEntity> serverNetwork = new MutableLiveData<>();
+
 
     private static String token;
     private static Integer role;
@@ -130,22 +133,6 @@ public class RetrofitCall {
         }
     }
 
-    public void serverPowerOn(Server server){
-        if (role == 1){
-            adminServerPowerOn();
-        } else {
-            userServerPowerOn(server);
-        }
-    }
-
-    public void serverPowerOff(Server server){
-        if (role == 1){
-            adminServerPowerOff();
-        } else {
-            userServerPowerOff();
-        }
-    }
-
     // Методы для вызова
 
     private void getAdminServers(){
@@ -197,42 +184,109 @@ public class RetrofitCall {
         });
     }
 
-    private void adminServerPowerOn(){
+    // Вкл/выкл сервера
 
-    }
-
-    private void adminServerPowerOff(){
-
-    }
-
-    private void userServerPowerOn(Server server){
+    public void serverPowerOn(Server server){
         App.getInstance().getApi().powerStart("Bearer " + token, server.getId()).enqueue(new Callback<ResponseEntity>() {
             @Override
             public void onResponse(Call<ResponseEntity> call, Response<ResponseEntity> response) {
-                allServers = new ServersEntity();
                 if (response.body() != null){
-                    if (response.body().isOk())
-                    serversData.postValue(allServers);
-                    Log.d("API", "сервера получены " + response.code() + " || " + response.body().toString() + " || " + response.message());
+                    serverPower.postValue(response.body());
+                    Log.d("API", "сервера включен " + response.code() + " || " + response.body().toString() + " || " + response.message());
                 } else {
-//                    servers.setServers(new ArrayList<Server>());
-                    Log.d("API", "сервера не получены" + response.message() + " || код " + response.code());
-                    FirebaseCrashlytics.getInstance().log("сервера не получены" + response.message() + " || код " + response.code());
+                    ResponseEntity resp = new ResponseEntity();
+                    resp.setOk(false);
+                    serverPower.postValue(resp);
+                    Log.e("API", "сервер не включен" + response.message() + " || код " + response.code());
+                    FirebaseCrashlytics.getInstance().log("сервер не включен" + response.message() + " || код " + response.code());
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseEntity> call, Throwable t) {
-                Log.d("API", "сервера не получены, ошибка с сервера");
+                Log.e("API", "ошибка с сервера");
                 System.out.println(t.getMessage());
                 System.out.println(call.toString());
             }
         });
     }
 
-    private void userServerPowerOff(){
+    public void serverPowerOff(Server server, Boolean force){
+        App.getInstance().getApi().powerStop("Bearer " + token, server.getId(), force).enqueue(new Callback<ResponseEntity>() {
+            @Override
+            public void onResponse(Call<ResponseEntity> call, Response<ResponseEntity> response) {
+                if (response.body() != null){
+                    serverPower.postValue(response.body());
+                    Log.d("API", "сервера выключен " + response.code() + " || " + response.body().toString() + " || " + response.message());
+                } else {
+                    ResponseEntity resp = new ResponseEntity();
+                    resp.setOk(false);
+                    serverPower.postValue(resp);
+                    Log.e("API", "сервер не выключен" + response.message() + " || код " + response.code());
+                    FirebaseCrashlytics.getInstance().log("сервер не выключен" + response.message() + " || код " + response.code());
+                }
+            }
 
+            @Override
+            public void onFailure(Call<ResponseEntity> call, Throwable t) {
+                Log.e("API", "ошибка с сервера");
+                System.out.println(t.getMessage());
+                System.out.println(call.toString());
+            }
+        });
     }
+
+    public void serverNetworkStart(Server server){
+        App.getInstance().getApi().networkStart("Bearer " + token, server.getId()).enqueue(new Callback<ResponseEntity>() {
+            @Override
+            public void onResponse(Call<ResponseEntity> call, Response<ResponseEntity> response) {
+                if (response.body() != null){
+                    serverNetwork.postValue(response.body());
+                    Log.d("API", "сеть сервера включена " + response.code() + " || " + response.body().toString() + " || " + response.message());
+                } else {
+                    ResponseEntity resp = new ResponseEntity();
+                    resp.setOk(false);
+                    serverNetwork.postValue(resp);
+                    Log.e("API", "сеть сервера не включена" + response.message() + " || код " + response.code());
+                    FirebaseCrashlytics.getInstance().log("сеть сервер не включена " + response.message() + " || код " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseEntity> call, Throwable t) {
+                Log.e("API", "ошибка с сервера");
+                System.out.println(t.getMessage());
+                System.out.println(call.toString());
+            }
+        });
+    }
+
+    public void serverNetworkStop(Server server){
+        App.getInstance().getApi().networkStop("Bearer " + token, server.getId()).enqueue(new Callback<ResponseEntity>() {
+            @Override
+            public void onResponse(Call<ResponseEntity> call, Response<ResponseEntity> response) {
+                if (response.body() != null){
+                    serverNetwork.postValue(response.body());
+                    Log.d("API", "сеть сервера выключена " + response.code() + " || " + response.body().toString() + " || " + response.message());
+                } else {
+                    ResponseEntity resp = new ResponseEntity();
+                    resp.setOk(false);
+                    serverNetwork.postValue(resp);
+                    Log.e("API", "сеть сервера не выключена" + response.message() + " || код " + response.code());
+                    FirebaseCrashlytics.getInstance().log("сеть сервер не выключена " + response.message() + " || код " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseEntity> call, Throwable t) {
+                Log.e("API", "ошибка с сервера");
+                System.out.println(t.getMessage());
+                System.out.println(call.toString());
+            }
+        });
+    }
+
+    // Получение сервера
 
     public void getServer(String id){
         App.getInstance().getApi().getServer("Bearer " + token, id).enqueue(new Callback<ServerEntity>() {
@@ -328,6 +382,14 @@ public class RetrofitCall {
 
     public LiveData<AuthorisationEntity> getAuthorisationState(){
         return authorisationData;
+    }
+
+    public LiveData<ResponseEntity> getServerPower(){
+        return serverPower;
+    }
+
+    public LiveData<ResponseEntity> getServerNetwork(){
+        return serverNetwork;
     }
 
     // Parsing and Decode refresh token

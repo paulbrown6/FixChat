@@ -4,6 +4,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -38,17 +39,17 @@ public class ServersFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_servers, container, false);
+        final View root = inflater.inflate(R.layout.fragment_servers, container, false);
         recyclerView = root.findViewById(R.id.servers_recycle);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         owner = HomeActivity.getOwner();
-
+        final Activity activity = this.getActivity();
         RetrofitCall.getInstance().getServers();
         RetrofitCall.getInstance().getServersState().observe(owner, new Observer<ServersEntity>(){
             @Override
             public void onChanged(ServersEntity serversEntity) {
                 if (RetrofitCall.getRole() == 1) { adapter = new AdapterAdminServer(serversEntity.getServers()); }
-                else {adapter = new AdapterUserServer(serversEntity.getServers());}
+                else {adapter = new AdapterUserServer(serversEntity.getServers(), activity);}
                 recyclerView.setAdapter(adapter);
             }
         });

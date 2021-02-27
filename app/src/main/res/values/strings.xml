@@ -21,13 +21,18 @@
     <string name="toggle_admin">admin</string>
     <string name="toggle_user">user</string>
     <string name="name_user">Anaxita</string>
-    <string name="subname_user">creative director</string>
-    <string-array name="settings_type">
-        <item>1. Вкл./выкл. сервер</item>
-        <item>2. Параметры</item>
-        <item>3. Отключить питание</item>
-        <item>4. Добавить пользователя</item>
-        <item>5. Процессы</item>
+    <string name="email_user">creative@mail.ru</string>
+    <string-array name="settings_server_type">
+        <item>Пуск</item>
+        <item>Завершение работы</item>
+        <item>Выключение</item>
+        <item>Свойства</item>
+    </string-array>
+    <string-array name="settings_user_type">
+        <item>Редактировать</item>
+        <item>Сменить пароль</item>
+        <item>Добавить сервер</item>
+        <item>Удалить</item>
     </string-array>
 
     <!--    <string name="invalid_username">Not a valid username</string>-->
@@ -62,4 +67,10 @@
     <string name="server_power">Power</string>
     <string name="menu_add">Add</string>
     <string name="menu_search">Search</string>
+    <string name="off_server">Выключить сервер?</string>
+    <string name="dop_func">Дополнительные функции:</string>
+    <string name="check_force">Принудительное выключение*</string>
+    <string name="check_force_text">* Принудительное выключение может привести к повреждению системы и потере данных. Используйте только в экстренных ситуациях.</string>
+    <string name="cancel">Отмена</string>
+    <string name="power_off">Выключить</string>
 </resources>

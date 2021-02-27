@@ -4,7 +4,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -12,7 +11,6 @@ import android.widget.ToggleButton;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pb.app.fixchat.R;
-import com.pb.app.fixchat.api.entity.Server;
 import com.pb.app.fixchat.api.entity.User;
 
 import java.util.List;
@@ -33,10 +31,10 @@ public class AdapterAdminUser extends RecyclerView.Adapter<AdapterAdminUser.View
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        String serverName = contents.get(position).getName();
-        String serverName2 = contents.get(position).getEmail();
-        holder.name.setText(serverName);
-        holder.name2.setText(serverName2);
+        String userName = contents.get(position).getName();
+        String userEmail = contents.get(position).getEmail();
+        holder.email.setText(userEmail);
+        holder.name.setText(userName);
         holder.type.setChecked(contents.get(position).getRole()==1);
     }
 
@@ -54,17 +52,17 @@ public class AdapterAdminUser extends RecyclerView.Adapter<AdapterAdminUser.View
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
+        TextView email;
         TextView name;
-        TextView name2;
         ToggleButton type;
         Spinner spinnerSettings;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.admin_name_user);
-            name2 = itemView.findViewById(R.id.admin_subname_user);
+            email = itemView.findViewById(R.id.admin_name_user);
+            name = itemView.findViewById(R.id.admin_subname_user);
             type = itemView.findViewById(R.id.button_usertype_toggle);
-            spinnerSettings = itemView.findViewById(R.id.admin_server_spinner);
+            spinnerSettings = itemView.findViewById(R.id.admin_user_spinner);
             spinnerSettings.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     ((TextView)view).setText(null);

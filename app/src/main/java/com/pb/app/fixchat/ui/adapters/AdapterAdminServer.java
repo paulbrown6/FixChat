@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -78,7 +79,6 @@ public class AdapterAdminServer extends RecyclerView.Adapter<AdapterAdminServer.
         TextView name;
         TextView name2;
         ToggleButton power;
-        ProgressBar progressPower;
         Spinner spinnerSettings;
 
         public ViewHolder(View itemView) {
@@ -86,13 +86,13 @@ public class AdapterAdminServer extends RecyclerView.Adapter<AdapterAdminServer.
             name = itemView.findViewById(R.id.admin_name_server);
             name2 = itemView.findViewById(R.id.admin_name_host);
             power = itemView.findViewById(R.id.button_server_toggle);
-            progressPower = itemView.findViewById(R.id.admin_progress_power);
             spinnerSettings = itemView.findViewById(R.id.admin_server_spinner);
             spinnerSettings.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     ((TextView)view).setText(null);
                     }
-                public void onNothingSelected(AdapterView<?> arg0) {}
+                public void onNothingSelected(AdapterView<?> arg0) {
+                }
             });
         }
     }

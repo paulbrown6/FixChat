@@ -16,22 +16,49 @@
 
         <LinearLayout
             android:id="@+id/linlay"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="30dp"
+            android:layout_alignStart="@id/card"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="30dp"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="15dp"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/admin_name_user"
-                android:layout_width="160dp"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto"
-                android:maxWidth="150dp"
-                android:text="@string/name_user"
-                android:textSize="16sp" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/admin_name_user"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto"
+                    android:maxWidth="150dp"
+                    android:text="@string/email_user"
+                    android:textSize="16sp" />
+
+                <ToggleButton
+                    android:id="@+id/button_usertype_toggle"
+                    android:layout_width="50dp"
+                    android:layout_height="15dp"
+
+                    android:layout_gravity="top"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/button_toggle"
+                    android:checked="true"
+                    android:clickable="false"
+                    android:fontFamily="@font/roboto_bold"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@color/white"
+                    android:textIsSelectable="false"
+                    android:textOff="@string/toggle_user"
+                    android:textOn="@string/toggle_admin"
+                    android:textSize="11sp" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/admin_subname_user"
@@ -40,51 +67,38 @@
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/roboto"
                 android:maxWidth="150dp"
-                android:text="@string/subname_user"
+                android:text="@string/name_user"
                 android:textSize="12sp" />
 
         </LinearLayout>
 
-        <ToggleButton
-            android:id="@+id/button_usertype_toggle"
-            android:layout_width="50dp"
-            android:layout_height="15dp"
 
-            android:layout_marginTop="19dp"
-            android:layout_marginBottom="15dp"
-            android:layout_toRightOf="@id/linlay"
-            android:background="@drawable/button_toggle"
-            android:checked="true"
-            android:clickable="false"
-            android:fontFamily="@font/roboto_bold"
-            android:gravity="center"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="@color/white"
-            android:textIsSelectable="false"
-            android:textOff="@string/toggle_user"
-            android:textOn="@string/toggle_admin"
-            android:textSize="11sp" />
-
-        <Spinner
-            android:id="@+id/admin_server_spinner"
-            android:layout_width="65dp"
-            android:layout_height="45dp"
-            android:layout_alignParentRight="true"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="30dp"
-            android:background="@drawable/button"
-            android:backgroundTint="#F1F1F1"
-            android:clickable="true"
-            android:duplicateParentState="true"
-            android:elevation="2dp"
-            android:entries="@array/settings_type"
-            android:foreground="@drawable/ic_menu_settings"
-            android:foregroundGravity="center"
-            android:outlineProvider="background"
-            android:soundEffectsEnabled="false"
-            android:spinnerMode="dropdown"
-            android:translationZ="3dp" />
+            android:layout_marginEnd="30dp"
+            android:translationZ="3dp"
+            app:cardBackgroundColor="@color/colorNotVisible"
+            app:cardCornerRadius="15dp"
+            app:cardElevation="2dp"
+            app:cardPreventCornerOverlap="false"
+            app:cardUseCompatPadding="false">
+
+            <Spinner
+                android:id="@+id/admin_user_spinner"
+                android:layout_width="53dp"
+                android:layout_height="31dp"
+
+                android:background="@drawable/background_button_settings"
+                android:clickable="true"
+                android:entries="@array/settings_user_type"
+                android:focusable="true"
+                android:spinnerMode="dropdown" />
+
+        </androidx.cardview.widget.CardView>
 
     </RelativeLayout>
 
