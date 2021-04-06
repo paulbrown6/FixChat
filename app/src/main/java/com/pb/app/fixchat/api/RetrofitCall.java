@@ -35,7 +35,7 @@ public class RetrofitCall {
     private final MutableLiveData<UserEntity> userData = new MutableLiveData<>();
     private final MutableLiveData<ServersEntity> serversData = new MutableLiveData<>();
     private final MutableLiveData<ServerEntity> serverData = new MutableLiveData<>();
-    private final MutableLiveData<ResponseEntity> serverPower = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> serverPower = new MutableLiveData<>();
     private final MutableLiveData<ResponseEntity> serverNetwork = new MutableLiveData<>();
 
 
@@ -191,12 +191,10 @@ public class RetrofitCall {
             @Override
             public void onResponse(Call<ResponseEntity> call, Response<ResponseEntity> response) {
                 if (response.body() != null){
-                    serverPower.postValue(response.body());
+                    serverPower.postValue(response.body().isOk());
                     Log.d("API", "сервера включен " + response.code() + " || " + response.body().toString() + " || " + response.message());
                 } else {
-                    ResponseEntity resp = new ResponseEntity();
-                    resp.setOk(false);
-                    serverPower.postValue(resp);
+                    serverPower.postValue(false);
                     Log.e("API", "сервер не включен" + response.message() + " || код " + response.code());
                     FirebaseCrashlytics.getInstance().log("сервер не включен" + response.message() + " || код " + response.code());
                 }
@@ -216,12 +214,10 @@ public class RetrofitCall {
             @Override
             public void onResponse(Call<ResponseEntity> call, Response<ResponseEntity> response) {
                 if (response.body() != null){
-                    serverPower.postValue(response.body());
+                    serverPower.postValue(!response.body().isOk());
                     Log.d("API", "сервера выключен " + response.code() + " || " + response.body().toString() + " || " + response.message());
                 } else {
-                    ResponseEntity resp = new ResponseEntity();
-                    resp.setOk(false);
-                    serverPower.postValue(resp);
+                    serverPower.postValue(true);
                     Log.e("API", "сервер не выключен" + response.message() + " || код " + response.code());
                     FirebaseCrashlytics.getInstance().log("сервер не выключен" + response.message() + " || код " + response.code());
                 }
@@ -384,7 +380,7 @@ public class RetrofitCall {
         return authorisationData;
     }
 
-    public LiveData<ResponseEntity> getServerPower(){
+    public LiveData<Boolean> getServerPower(){
         return serverPower;
     }
 

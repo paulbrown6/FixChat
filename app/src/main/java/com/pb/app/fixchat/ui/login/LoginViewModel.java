@@ -8,9 +8,9 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
+import com.pb.app.fixchat.api.CallV2;
 import com.pb.app.fixchat.api.RetrofitCall;
 import com.pb.app.fixchat.api.entity.AuthorisationEntity;
-import com.pb.app.fixchat.data.database.DatabaseSQL;
 import com.pb.app.fixchat.data.model.LoggedInUser;
 import com.pb.app.fixchat.R;
 
@@ -31,6 +31,7 @@ public class LoginViewModel extends ViewModel {
 
     public void login(LifecycleOwner owner,String email, String password) {
         RetrofitCall.getInstance().authorisation(email, password);
+        CallV2.getInstance().signIn(email, password);
         RetrofitCall.getInstance().getAuthorisationState().observe(owner, new Observer<AuthorisationEntity>() {
                     @Override
                     public void onChanged(AuthorisationEntity authorisationEntity) {

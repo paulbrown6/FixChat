@@ -1,13 +1,16 @@
 package com.pb.app.fixchat.ui.adapters;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.lifecycle.Observer;
@@ -52,23 +55,33 @@ public class AdapterUserServer extends RecyclerView.Adapter<AdapterUserServer.Vi
         holder.name.setText(serverName);
         holder.port.setText(serverName2);
         holder.power.setChecked(power.equals("Running"));
+        holder.power.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
         holder.power.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(final CompoundButton button, boolean isChecked) {
-                if (isChecked){
+            public void onCheckedChanged(final CompoundButton button, final boolean isChecked) {
+                if(button.isPressed()) {
+                    Log.d("SERVER_POWER_CHECKED", " " + isChecked);
                     button.setVisibility(View.INVISIBLE);
                     progressBarPower.setVisibility(View.VISIBLE);
-                    if (button.isChecked()){
-                        DialogServerForce.getInstance().createAlertDialog(activity, server);
+                    if (!button.isChecked()) {
+                        DialogServerForce.getInstance().createAlertDialog(activity, server, button, progressBarPower);
                     } else {
                         RetrofitCall.getInstance().serverPowerOn(server);
                     }
-                    RetrofitCall.getInstance().getServerPower().observe(HomeActivity.getOwner(), new Observer<ResponseEntity>() {
+                    RetrofitCall.getInstance().getServerPower().observe(HomeActivity.getOwner(), new Observer<Boolean>() {
                         @Override
-                        public void onChanged(ResponseEntity responseEntity) {
-                            button.setChecked(responseEntity.isOk());
+                        public void onChanged(Boolean power) {
                             button.setVisibility(View.VISIBLE);
                             progressBarPower.setVisibility(View.INVISIBLE);
+                            if (isChecked != power) {
+                                Toast.makeText(activity, "Ошибка на сервере", Toast.LENGTH_SHORT).show();
+                                button.setChecked(power);
+                            }
                         }
                     });
                 }
