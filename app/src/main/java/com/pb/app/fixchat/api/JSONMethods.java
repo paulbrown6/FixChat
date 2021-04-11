@@ -22,17 +22,17 @@ public class JSONMethods {
     }
 
     public static JSONObject createRequest(String body){
-        String[] parts = body.split("\\|");
+        String[] parts = body.split("::");
         JSONObject jsonObject = new JSONObject();
         try {
             for (int i = 0; i < parts.length; i++){
-                String[] object = parts[i].split("\\.");
+                String[] object = parts[i].split("==");
                 jsonObject.put(object[0], object[1]);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
+        Log.d("REQUEST_JSON", "Create: " + jsonObject.toString());
         return jsonObject;
     }
 

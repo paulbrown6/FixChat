@@ -18,20 +18,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.kyleduo.switchbutton.SwitchButton;
 import com.pb.app.fixchat.R;
+import com.pb.app.fixchat.api.CallV2;
 import com.pb.app.fixchat.api.RetrofitCall;
 import com.pb.app.fixchat.api.entity.ResponseEntity;
-import com.pb.app.fixchat.api.entity.Server;
+import com.pb.app.fixchat.api.entityV2.Server;
 import com.pb.app.fixchat.ui.HomeActivity;
 import com.pb.app.fixchat.ui.fragments.dialogs.DialogServerForce;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class AdapterUserServer extends RecyclerView.Adapter<AdapterUserServer.ViewHolder> {
 
-    private List<Server> contents;
+    private ArrayList<Server> contents;
     private Activity activity;
 
-    public AdapterUserServer(List<Server> contents, Activity activity) {
+    public AdapterUserServer(ArrayList<Server> contents, Activity activity) {
         this.contents = contents;
         this.activity = activity;
     }
@@ -47,7 +50,7 @@ public class AdapterUserServer extends RecyclerView.Adapter<AdapterUserServer.Vi
         final Server server = contents.get(position);
         String serverName = server.getName();
         String serverName2 = server.getHv();
-        String power = server.getPower();
+        String power = server.getState();
         String network = server.getNetwork();
 
         final ProgressBar progressBarPower = holder.progressPower;
@@ -71,16 +74,19 @@ public class AdapterUserServer extends RecyclerView.Adapter<AdapterUserServer.Vi
                     if (!button.isChecked()) {
                         DialogServerForce.getInstance().createAlertDialog(activity, server, button, progressBarPower);
                     } else {
-                        RetrofitCall.getInstance().serverPowerOn(server);
+                        CallV2.getInstance().controlServer(server.getId(), Server.START_POWER);
                     }
-                    RetrofitCall.getInstance().getServerPower().observe(HomeActivity.getOwner(), new Observer<Boolean>() {
+                    CallV2.getInstance().getServerState().observe(HomeActivity.getOwner(), new Observer<Map<String, Server>>() {
                         @Override
-                        public void onChanged(Boolean power) {
-                            button.setVisibility(View.VISIBLE);
-                            progressBarPower.setVisibility(View.INVISIBLE);
-                            if (isChecked != power) {
-                                Toast.makeText(activity, "Ошибка на сервере", Toast.LENGTH_SHORT).show();
-                                button.setChecked(power);
+                        public void onChanged(Map<String, Server> map) {
+                            if (map.containsKey(Server.STOP_POWER) ||
+                                    map.containsKey(Server.STOP_POWER_FORCE) || map.containsKey(Server.START_POWER)) {
+                                button.setVisibility(View.VISIBLE);
+                                progressBarPower.setVisibility(View.INVISIBLE);
+                                if (isChecked != map.values().iterator().next().getState().equals("accepted")) {
+                                    Toast.makeText(activity, "Ошибка на сервере", Toast.LENGTH_SHORT).show();
+                                    button.setChecked(map.values().iterator().next().getState().equals("accepted"));
+                                }
                             }
                         }
                     });
@@ -95,16 +101,18 @@ public class AdapterUserServer extends RecyclerView.Adapter<AdapterUserServer.Vi
                     button.setVisibility(View.INVISIBLE);
                     progressBarNetwork.setVisibility(View.VISIBLE);
                     if (button.isChecked()){
-                        RetrofitCall.getInstance().serverNetworkStop(server);
+                        CallV2.getInstance().controlServer(server.getId(), Server.STOP_NETWORK);
                     } else {
-                        RetrofitCall.getInstance().serverNetworkStart(server);
+                        CallV2.getInstance().controlServer(server.getId(), Server.START_NETWORK);
                     }
-                    RetrofitCall.getInstance().getServerNetwork().observe(HomeActivity.getOwner(), new Observer<ResponseEntity>() {
+                    CallV2.getInstance().getServerState().observe(HomeActivity.getOwner(), new Observer<Map<String, Server>>() {
                         @Override
-                        public void onChanged(ResponseEntity responseEntity) {
-                            button.setChecked(responseEntity.isOk());
-                            button.setVisibility(View.VISIBLE);
-                            progressBarNetwork.setVisibility(View.INVISIBLE);
+                        public void onChanged(Map<String, Server> map) {
+                            if (map.containsKey(Server.START_NETWORK) || map.containsKey(Server.STOP_NETWORK)) {
+                                button.setChecked(map.values().iterator().next().getState().equals("accepted"));
+                                button.setVisibility(View.VISIBLE);
+                                progressBarNetwork.setVisibility(View.INVISIBLE);
+                            }
                         }
                     });
                 }

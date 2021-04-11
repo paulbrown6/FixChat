@@ -26,8 +26,6 @@ public interface ApiV2 {
 
     @POST ("refresh")
     Call<ResponseApi> refresh(@Body String body);
-                                    // BODY : refresh_token
-
 
     //Servers
     @GET ("servers")

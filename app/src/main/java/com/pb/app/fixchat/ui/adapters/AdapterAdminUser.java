@@ -11,15 +11,16 @@ import android.widget.ToggleButton;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pb.app.fixchat.R;
-import com.pb.app.fixchat.api.entity.User;
+import com.pb.app.fixchat.api.entityV2.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AdapterAdminUser extends RecyclerView.Adapter<AdapterAdminUser.ViewHolder> {
 
-    private List<User> contents;
+    private ArrayList<User> contents;
 
-    public AdapterAdminUser(List<User> contents) {
+    public AdapterAdminUser(ArrayList<User> contents) {
         this.contents = contents;
     }
 

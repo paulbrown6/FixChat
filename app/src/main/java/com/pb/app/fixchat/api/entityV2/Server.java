@@ -39,6 +39,8 @@ public class Server {
     public static String STOP_POWER_FORCE = "stop_power_force";
     public static String START_NETWORK = "start_network";
     public static String STOP_NETWORK = "stop_network";
+    public static String EDIT_SERVER = "edit_server";
+    public static String DELETE_SERVER = "delete_server";
 
     public String getId() {
         return id;
@@ -114,9 +116,9 @@ public class Server {
 
     @NonNull
     public String toString(){
-        return "ID = "+ id + " / name = " + name + "  / state = " + state +
-                "  / Network = " + network + "company = "+ company +
-                " / description = " + description + "ip = "+ ip +
+        return "ID = "+ id + " / name = " + name + " / state = " + state +
+                "  / Network = " + network + " / company = "+ company +
+                " / description = " + description + " / ip = "+ ip +
                 "  / out_addr = " + out_addr;
     }
 }

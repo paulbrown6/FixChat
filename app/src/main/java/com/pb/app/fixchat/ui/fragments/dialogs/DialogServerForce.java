@@ -9,11 +9,11 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.pb.app.fixchat.R;
+import com.pb.app.fixchat.api.CallV2;
 import com.pb.app.fixchat.api.RetrofitCall;
-import com.pb.app.fixchat.api.entity.Server;
+import com.pb.app.fixchat.api.entityV2.Server;
 
 public class DialogServerForce {
 
@@ -58,11 +58,12 @@ public class DialogServerForce {
         buttonPowerOff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean force = false;
                 if (checkForce.isChecked()){
-                    force = true;
+                    CallV2.getInstance().controlServer(server.getId(), Server.STOP_POWER_FORCE);
+                } else {
+                    CallV2.getInstance().controlServer(server.getId(), Server.STOP_POWER);
                 }
-                RetrofitCall.getInstance().serverPowerOff(server, force);
+//                RetrofitCall.getInstance().serverPowerOff(server, force);
                 alert.dismiss();
             }
         });

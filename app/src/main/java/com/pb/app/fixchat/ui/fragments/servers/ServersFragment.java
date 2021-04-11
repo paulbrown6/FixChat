@@ -16,14 +16,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 
 import com.pb.app.fixchat.R;
-import com.pb.app.fixchat.api.RetrofitCall;
-import com.pb.app.fixchat.api.entity.ServersEntity;
+import com.pb.app.fixchat.api.CallV2;
+import com.pb.app.fixchat.api.entityV2.Server;
 import com.pb.app.fixchat.ui.HomeActivity;
 import com.pb.app.fixchat.ui.adapters.AdapterAdminServer;
 import com.pb.app.fixchat.ui.adapters.AdapterUserServer;
+
+import java.util.ArrayList;
 
 public class ServersFragment extends Fragment {
 
@@ -44,15 +45,24 @@ public class ServersFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         owner = HomeActivity.getOwner();
         final Activity activity = this.getActivity();
-        RetrofitCall.getInstance().getServers();
-        RetrofitCall.getInstance().getServersState().observe(owner, new Observer<ServersEntity>(){
+//        RetrofitCall.getInstance().getServers();
+        CallV2.getInstance().getServers();
+        CallV2.getInstance().getServersState().observe(owner, new Observer<ArrayList<Server>>() {
             @Override
-            public void onChanged(ServersEntity serversEntity) {
-                if (RetrofitCall.getRole() == 1) { adapter = new AdapterAdminServer(serversEntity.getServers()); }
-                else {adapter = new AdapterUserServer(serversEntity.getServers(), activity);}
+            public void onChanged(ArrayList<Server> servers) {
+                if (CallV2.getUser().getRole() == 1) { adapter = new AdapterAdminServer(servers); }
+                else {adapter = new AdapterUserServer(servers, activity);}
                 recyclerView.setAdapter(adapter);
             }
         });
+//        RetrofitCall.getInstance().getServersState().observe(owner, new Observer<ServersEntity>(){
+//            @Override
+//            public void onChanged(ServersEntity serversEntity) {
+//                if (RetrofitCall.getRole() == 1) { adapter = new AdapterAdminServer(serversEntity.getServers()); }
+//                else {adapter = new AdapterUserServer(serversEntity.getServers(), activity);}
+//                recyclerView.setAdapter(adapter);
+//            }
+//        });
         return root;
     }
 

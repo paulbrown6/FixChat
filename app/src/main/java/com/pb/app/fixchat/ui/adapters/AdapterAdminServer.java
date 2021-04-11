@@ -14,15 +14,16 @@ import android.widget.ToggleButton;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pb.app.fixchat.R;
-import com.pb.app.fixchat.api.entity.Server;
+import com.pb.app.fixchat.api.entityV2.Server;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AdapterAdminServer extends RecyclerView.Adapter<AdapterAdminServer.ViewHolder> {
 
-    private List<Server> contents;
+    private ArrayList<Server> contents;
 
-    public AdapterAdminServer(List<Server> contents) {
+    public AdapterAdminServer(ArrayList<Server> contents) {
         this.contents = contents;
     }
 
@@ -36,7 +37,7 @@ public class AdapterAdminServer extends RecyclerView.Adapter<AdapterAdminServer.
     public void onBindViewHolder(final ViewHolder holder, int position) {
         String serverName = contents.get(position).getName();
         String serverName2 = contents.get(position).getHv();
-        String power = contents.get(position).getPower();
+        String power = contents.get(position).getState();
         String network = contents.get(position).getNetwork();
 
 //        final ProgressBar progressBar = holder.progress;

@@ -11,14 +11,18 @@ public class ValueConverter {
 
     public static ArrayList<Server> convertValueToServers(String value){
         ArrayList<Server> servers = new ArrayList<>();
-        if (value != null && value.length() > 2 && value.contains("\\[")) {
-            String[] x = value.substring(1, value.length()-1).split(", ");
+        if (!value.isEmpty() && value.length() > 2) {
+            String[] x = value.substring(2, value.length()-2).split("\\}, \\{");
             for (int i = 0; i < x.length; i++){
-                String[] y = x[i].substring(1, x[i].length()-1).split(", ");
+                String[] y = x[i].split(", ");
                 Map<String, String> map = new ArrayMap<>();
                 for (int n = 0; n < y.length; n++){
                     String[] z = y[n].split("=");
-                    map.put(z[0], z[1]);
+                    if (z.length > 1) {
+                        map.put(z[0], z[1]);
+                    } else {
+                        map.put(z[0], " ");
+                    }
                 }
                 try {
                     Server server = new Server();
@@ -37,19 +41,24 @@ public class ValueConverter {
                 }
             }
         }
+        Log.d("SERVER PARSER", "convertValue: " + servers.toString());
         return servers;
     }
 
     public static ArrayList<User> convertValueToUsers(String value){
         ArrayList<User> users = new ArrayList<>();
-        if (value != null && value.length() > 2 && value.contains("\\[")) {
-            String[] x = value.substring(1, value.length()-1).split(", ");
+        if (value != null && value.length() > 2) {
+            String[] x = value.substring(2, value.length()-2).split("\\}, \\{");
             for (int i = 0; i < x.length; i++){
-                String[] y = x[i].substring(1, x[i].length()-1).split(", ");
+                String[] y = x[i].split(", ");
                 Map<String, String> map = new ArrayMap<>();
                 for (int n = 0; n < y.length; n++){
                     String[] z = y[n].split("=");
-                    map.put(z[0], z[1]);
+                    if (z.length > 1) {
+                        map.put(z[0], z[1]);
+                    } else {
+                        map.put(z[0], " ");
+                    }
                 }
                 try {
                     User user = new User();
@@ -57,13 +66,14 @@ public class ValueConverter {
                     user.setName(map.get("name"));
                     user.setEmail(map.get("email"));
                     user.setCompany(map.get("company"));
-                    user.setRole(Integer.parseInt(map.get("role")));
+                    user.setRole(Integer.parseInt(map.get("role").substring(0, map.get("role").length()-2)));
                     users.add(user);
                 } catch (Exception e) {
                     Log.e("USER PARSER", "convertValue: " + e.toString());
                 }
             }
         }
+        Log.d("USER PARSER", "convertValue: " + users.toString());
         return users;
     }
 }

@@ -19,8 +19,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.pb.app.fixchat.R;
+import com.pb.app.fixchat.api.CallV2;
 import com.pb.app.fixchat.api.RetrofitCall;
 import com.pb.app.fixchat.api.entity.AuthorisationEntity;
+import com.pb.app.fixchat.api.entityV2.User;
 import com.pb.app.fixchat.data.database.DatabaseSQL;
 import com.pb.app.fixchat.data.model.LoggedInUser;
 import com.pb.app.fixchat.data.model.TokenDatabase;
@@ -42,23 +44,24 @@ public class StartActivity extends AppCompatActivity {
         }
 
         TokenDatabase td = DatabaseSQL.getInstance().writeTokenFromDB(this);
-        if (td.getRefToken() == " ") launchActivity(intent);
+        if (td.getRefToken().equals(" ")) launchActivity(intent);
 
         ImageView logo = findViewById(R.id.start_logo);
         Animation anim = AnimationUtils.loadAnimation(this, R.anim.logo_anim);
         logo.startAnimation(anim);
 
-        RetrofitCall.getInstance().refresh(td.getRefToken());
-        RetrofitCall.getInstance().getAuthorisationState().observe(this, new Observer<AuthorisationEntity>() {
+//        RetrofitCall.getInstance().refresh(td.getRefToken());
+        CallV2.getInstance().refreshToken(td.getRefToken());
+        CallV2.getInstance().getSignState().observe(this, new Observer<User>() {
             @Override
-            public void onChanged(AuthorisationEntity authorisationEntity) {
-                Log.d("START ACTIVITY", "Ответ: " + authorisationEntity);
-                if (authorisationEntity.getTokenEntity() != null) {
+            public void onChanged(User user) {
+                Log.d("START ACTIVITY", "Ответ: " + user.toString());
+                if (user.getId() != null) {
                     intent = new Intent(StartActivity.this, HomeActivity.class);
-                    intent.putExtra("role", authorisationEntity.getTokenEntity().getRole());
+                    intent.putExtra("role", user.getRole());
 
                     DatabaseSQL.getInstance().deleteEntityFromDb(getApplicationContext());
-                    DatabaseSQL.getInstance().readTokenToDb(getApplicationContext(), authorisationEntity.getTokenEntity().getRefToken());
+                    DatabaseSQL.getInstance().readTokenToDb(getApplicationContext(), CallV2.getRefreshToken());
                 }
                 new Handler().postDelayed(new Runnable(){
                     public void run() {
@@ -67,6 +70,24 @@ public class StartActivity extends AppCompatActivity {
                 }, 2000);
             }
         });
+//        RetrofitCall.getInstance().getAuthorisationState().observe(this, new Observer<AuthorisationEntity>() {
+//            @Override
+//            public void onChanged(AuthorisationEntity authorisationEntity) {
+//                Log.d("START ACTIVITY", "Ответ: " + authorisationEntity);
+//                if (authorisationEntity.getTokenEntity() != null) {
+//                    intent = new Intent(StartActivity.this, HomeActivity.class);
+//                    intent.putExtra("role", authorisationEntity.getTokenEntity().getRole());
+//
+//                    DatabaseSQL.getInstance().deleteEntityFromDb(getApplicationContext());
+//                    DatabaseSQL.getInstance().readTokenToDb(getApplicationContext(), authorisationEntity.getTokenEntity().getRefToken());
+//                }
+//                new Handler().postDelayed(new Runnable(){
+//                    public void run() {
+//                        launchActivity(intent);
+//                    }
+//                }, 2000);
+//            }
+//        });
     }
 
     private void launchActivity(final Intent intent){

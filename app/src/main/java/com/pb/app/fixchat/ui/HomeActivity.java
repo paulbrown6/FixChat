@@ -10,6 +10,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -24,6 +25,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.pb.app.fixchat.R;
+import com.pb.app.fixchat.api.CallV2;
 import com.pb.app.fixchat.api.RetrofitCall;
 import com.pb.app.fixchat.data.database.DatabaseSQL;
 import com.pb.app.fixchat.ui.fragments.servers.ServersFragment;
@@ -43,6 +45,7 @@ public class HomeActivity extends AppCompatActivity {
     private MaterialSearchView searchView;
     private MenuItem addItem;
 
+    @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,7 +132,8 @@ public class HomeActivity extends AppCompatActivity {
 
     private void exit() {
         DatabaseSQL.getInstance().deleteEntityFromDb(getApplicationContext());
-        RetrofitCall.clear();
+//        RetrofitCall.clear();
+        CallV2.clear();
         startActivity(new Intent(HomeActivity.this, LoginActivity.class));
         finish();
     }
