@@ -15,12 +15,36 @@ public class Server {
     @SerializedName("hv")
     @Expose
     private String hv;
-    @SerializedName("power")
+    @SerializedName("state")
     @Expose
-    private String power;
+    private String state;
     @SerializedName("network")
     @Expose
     private String network;
+    @SerializedName("company")
+    @Expose
+    private String company;
+    @SerializedName("description")
+    @Expose
+    private String description;
+    @SerializedName("ip")
+    @Expose
+    private String ip;
+    @SerializedName("out_addr")
+    @Expose
+    private String out_addr;
+
+    public static String START_POWER = "start_power";
+    public static String STOP_POWER = "stop_power";
+    public static String STOP_POWER_FORCE = "stop_power_force";
+    public static String START_NETWORK = "start_network";
+    public static String STOP_NETWORK = "stop_network";
+    public static String EDIT_SERVER = "edit_server";
+    public static String DELETE_SERVER = "delete_server";
+    public static String STATE_RUNNING = "Running";
+    public static String NETWORK_RUNNING = "Running";
+
+    private Boolean haveUser = false;
 
     public String getId() {
         return id;
@@ -46,12 +70,12 @@ public class Server {
         this.hv = hv;
     }
 
-    public String getPower() {
-        return power;
+    public String getState() {
+        return state;
     }
 
-    public void setPower(String power) {
-        this.power = power;
+    public void setState(String state) {
+        this.state = state;
     }
 
     public String getNetwork() {
@@ -62,8 +86,51 @@ public class Server {
         this.network = network;
     }
 
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public String getOut_addr() {
+        return out_addr;
+    }
+
+    public void setOut_addr(String out_addr) {
+        this.out_addr = out_addr;
+    }
+
+    public Boolean isHaveUser() {
+        return haveUser;
+    }
+
+    public void setHaveUser(Boolean haveUser) {
+        this.haveUser = haveUser;
+    }
+
     @NonNull
     public String toString(){
-        return "ID = "+ id + " / Name = " + name + "  / Power = " + power + "  / Network = " + network;
+        return "ID = "+ id + " / name = " + name + " / state = " + state +
+                "  / Network = " + network + " / company = "+ company +
+                " / description = " + description + " / ip = "+ ip +
+                "  / out_addr = " + out_addr;
     }
 }

@@ -1,14 +1,12 @@
-package com.pb.app.fixchat.api.entityV2;
+package com.pb.app.fixchat.api.entity;
 import androidx.annotation.NonNull;
 import androidx.collection.ArrayMap;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.pb.app.fixchat.api.CallV2;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.Map;
 

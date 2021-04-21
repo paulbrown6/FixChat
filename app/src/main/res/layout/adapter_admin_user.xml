@@ -87,16 +87,14 @@
             app:cardPreventCornerOverlap="false"
             app:cardUseCompatPadding="false">
 
-            <Spinner
-                android:id="@+id/admin_user_spinner"
+            <Button
+                android:id="@+id/admin_user_button"
                 android:layout_width="53dp"
                 android:layout_height="31dp"
 
                 android:background="@drawable/background_button_settings"
                 android:clickable="true"
-                android:entries="@array/settings_user_type"
-                android:focusable="true"
-                android:spinnerMode="dropdown" />
+                android:focusable="true" />
 
         </androidx.cardview.widget.CardView>
 

@@ -11,7 +11,7 @@
         <item
             android:id="@+id/nav_users"
             android:icon="@drawable/ic_menu_users"
-            android:title="@string/menu_users" />
+            android:title="@string/menu_users"/>
     </group>
 
     <item android:title="@string/o">

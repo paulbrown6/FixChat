@@ -11,8 +11,10 @@
     <string name="title_home">Your servers</string>
     <string name="menu_users">Users</string>
     <string name="title_activity_login">KM Systems Servers</string>
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
+    <string name="prompt_email">Логин или почта</string>
+    <string name="prompt_password">Пароль</string>
+    <string name="prompt_username">Имя пользователя</string>
+    <string name="prompt_company">Компания</string>
     <string name="action_sign_in">Войти</string>
     <string name="action_sign_in_short">Войти</string>
     <string name="welcome">"Welcome, "</string>
@@ -22,20 +24,17 @@
     <string name="toggle_user">user</string>
     <string name="name_user">Anaxita</string>
     <string name="email_user">creative@mail.ru</string>
-    <string-array name="settings_server_type">
-        <item>Пуск</item>
-        <item>Завершение работы</item>
-        <item>Выключение</item>
-        <item>Свойства</item>
-    </string-array>
-    <string-array name="settings_user_type">
-        <item>Редактировать</item>
-        <item>Сменить пароль</item>
-        <item>Добавить сервер</item>
-        <item>Удалить</item>
+    <string name="menu_server_start">Пуск</string>
+    <string name="menu_server_cancel">Завершение работы</string>
+    <string name="menu_server_off">Выключение</string>
+    <string name="menu_server_properties">Свойства</string>
+    <string name="menu_user_edit">Редактировать</string>
+    <string name="menu_user_servers">Сервера</string>
+    <string-array name="prompt_user_role">
+        <item>Обычный пользователь</item>
+        <item>Администратор</item>
     </string-array>
 
-    <!--    <string name="invalid_username">Not a valid username</string>-->
     <string name="invalid_username">Login must be >3 characters</string>
     <string name="invalid_password">Password must be >3 characters</string>
     <string name="login_failed">"Login failed"</string>
@@ -73,4 +72,8 @@
     <string name="check_force_text">* Принудительное выключение может привести к повреждению системы и потере данных. Используйте только в экстренных ситуациях.</string>
     <string name="cancel">Отмена</string>
     <string name="power_off">Выключить</string>
+    <string name="add">Добавить</string>
+    <string name="save">Сохранить</string>
+    <string name="add_user">Добавить пользователя</string>
+    <string name="edit_user">Редактировать пользователя</string>
 </resources>

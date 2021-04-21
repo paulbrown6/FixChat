@@ -79,7 +79,7 @@
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textColor="#000000"
-                android:textSize="10sp"
+                android:textSize="11sp"
                 android:typeface="normal"
                 tools:ignore="SmallSp" />
 
@@ -98,7 +98,7 @@
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
-                android:textSize="10sp"
+                android:textSize="11sp"
                 android:typeface="normal"
                 tools:ignore="SmallSp" />
         </LinearLayout>

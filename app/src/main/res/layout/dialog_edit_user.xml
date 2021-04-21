@@ -1,0 +1,180 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|center_horizontal|center_vertical"
+        android:background="@drawable/background_dialog"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp">
+
+        <TextView
+            android:id="@+id/dialog_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto"
+            android:gravity="center"
+            android:text="@string/edit_user"
+            android:textAlignment="center"
+            android:textSize="19sp" />
+
+        <Spinner
+            android:id="@+id/add_user_role"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/field_login"
+            android:entries="@array/prompt_user_role"
+            android:fontFamily="@font/roboto"
+            android:paddingLeft="27dp"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/add_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/field_login"
+            android:drawableLeft="@drawable/ic_user"
+            android:drawablePadding="10dp"
+            android:fontFamily="@font/roboto"
+            android:hint="@string/prompt_username"
+            android:inputType="textEmailAddress"
+            android:paddingLeft="13dp"
+            android:paddingRight="5dp"
+            android:selectAllOnFocus="true"
+            android:textSize="12sp"/>
+
+        <EditText
+            android:id="@+id/add_company_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/field_login"
+            android:drawableLeft="@drawable/ic_company"
+            android:drawablePadding="10dp"
+            android:fontFamily="@font/roboto"
+            android:hint="@string/prompt_company"
+            android:inputType="textEmailAddress"
+            android:paddingLeft="13dp"
+            android:paddingRight="5dp"
+            android:selectAllOnFocus="true"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/add_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/field_login"
+            android:drawableLeft="@drawable/ic_login"
+            android:drawablePadding="10dp"
+            android:fontFamily="@font/roboto"
+            android:hint="@string/prompt_email"
+            android:inputType="textEmailAddress"
+            android:paddingLeft="13dp"
+            android:paddingRight="5dp"
+            android:selectAllOnFocus="true"
+            android:textSize="12sp"/>
+
+        <EditText
+            android:id="@+id/add_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/field_login"
+            android:drawableLeft="@drawable/ic_password"
+            android:drawablePadding="11dp"
+            android:fontFamily="@font/roboto"
+            android:hint="@string/prompt_password"
+            android:imeActionLabel="@string/action_sign_in_short"
+            android:imeOptions="actionDone"
+            android:inputType="textPassword"
+            android:paddingLeft="15dp"
+            android:paddingRight="5dp"
+            android:selectAllOnFocus="true"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/error_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="24dp"
+            android:fontFamily="@font/roboto"
+            android:gravity="center"
+            android:text="@android:string/unknownName"
+            android:textColor="?attr/colorError"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button_dialog_cancel_edit_user"
+                style="@style/FirebaseUI.VerifyPhoneButton"
+                android:layout_width="140dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="5dp"
+                android:backgroundTint="#FFFFFF"
+                android:backgroundTintMode="src_in"
+                android:fontFamily="@font/roboto"
+                android:gravity="center"
+                android:text="@string/cancel"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textColor="#000000"
+                android:textSize="11sp"
+                android:typeface="normal"
+                tools:ignore="SmallSp" />
+
+            <Button
+                android:id="@+id/button_dialog_edit_user"
+                style="@style/FirebaseUI.VerifyPhoneButton"
+                android:layout_width="140dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="5dp"
+                android:backgroundTint="@color/colorButton"
+                android:backgroundTintMode="src_in"
+                android:fontFamily="@font/roboto"
+                android:gravity="center"
+                android:text="@string/save"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="11sp"
+                android:typeface="normal"
+                tools:ignore="SmallSp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

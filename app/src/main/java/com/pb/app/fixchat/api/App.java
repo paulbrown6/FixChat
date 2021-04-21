@@ -14,7 +14,7 @@ public class App extends Application {
     private static App instance;
 
     public App(){
-        retrofit = new Retrofit.Builder().baseUrl("https://dc.kmsys.ru:53324/")
+        retrofit = new Retrofit.Builder().baseUrl("https://dc.kmsys.ru:53338/")
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

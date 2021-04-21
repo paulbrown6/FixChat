@@ -1,5 +1,6 @@
 package com.pb.app.fixchat.ui;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
@@ -25,13 +26,14 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.pb.app.fixchat.R;
-import com.pb.app.fixchat.api.CallV2;
-import com.pb.app.fixchat.api.RetrofitCall;
+import com.pb.app.fixchat.api.ApiCall;
+import com.pb.app.fixchat.api.entity.User;
 import com.pb.app.fixchat.data.database.DatabaseSQL;
+import com.pb.app.fixchat.ui.fragments.dialogs.DialogEditUser;
 import com.pb.app.fixchat.ui.fragments.servers.ServersFragment;
 import com.pb.app.fixchat.ui.login.LoginActivity;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity{
 
     private AppBarConfiguration mAppBarConfiguration;
     private DrawerLayout drawer;
@@ -43,7 +45,8 @@ public class HomeActivity extends AppCompatActivity {
     private TextView toolbarName;
     private MenuItem searchItem;
     private MaterialSearchView searchView;
-    private MenuItem addItem;
+    private MenuItem addUser;
+    private static HomeActivity activity;
 
     @SuppressLint("MissingPermission")
     @Override
@@ -54,6 +57,7 @@ public class HomeActivity extends AppCompatActivity {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        activity = this;
         if (getIntent().getExtras().getInt("role") == 1) {
             onCreateAdministrator(savedInstanceState);
         } else {
@@ -72,6 +76,18 @@ public class HomeActivity extends AppCompatActivity {
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupWithNavController(navigationView, navController);
         NavigationUI.setupActionBarWithNavController(this, navController, drawer);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.nav_users) {
+                    addUser.setVisible(true);
+                }
+                navigationView.setCheckedItem(item.getItemId());
+                NavigationUI.onNavDestinationSelected(item, navController);
+                drawer.close();
+                return true;
+            }
+        });
     }
 
     protected void onCreateUser(Bundle savedInstanceState) {
@@ -110,30 +126,30 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.add_user) {
+            DialogEditUser.getInstance().createAlertDialog(this, null, owner);
+        }
         if (item.getItemId() == android.R.id.home) {
             if (navController.getPreviousBackStackEntry() != null) {
+                addUser.setVisible(false);
                 navController.popBackStack();
                 return true;
             }
         }
-        if (item.getItemId() == R.id.nav_servers) {
-            addItem.setIcon(R.drawable.ic_add_servers);
-        }
-        if (item.getItemId() == R.id.nav_users) {
-            addItem.setIcon(R.drawable.ic_add_user);
-        }
         return super.onOptionsItemSelected(item);
-
     }
 
-    public void onExit(MenuItem item) {
-        exit();
+    @Override
+    public void onBackPressed() {
+        addUser.setVisible(false);
+        super.onBackPressed();
     }
+
+    public void onExit(MenuItem item) {exit();}
 
     private void exit() {
         DatabaseSQL.getInstance().deleteEntityFromDb(getApplicationContext());
-//        RetrofitCall.clear();
-        CallV2.clear();
+        ApiCall.clear();
         startActivity(new Intent(HomeActivity.this, LoginActivity.class));
         finish();
     }
@@ -141,12 +157,14 @@ public class HomeActivity extends AppCompatActivity {
     public static LifecycleOwner getOwner() {
         return owner;
     }
+    public static HomeActivity getActivity() {return activity;}
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
 
-        addItem = menu.findItem(R.id.add_object);
+        addUser = menu.findItem(R.id.add_user);
+        addUser.setVisible(false);
         searchItem = menu.findItem(R.id.search);
         searchView = findViewById(R.id.search_view);
         searchView.setMenuItem(searchItem);
@@ -176,4 +194,5 @@ public class HomeActivity extends AppCompatActivity {
         });
         return true;
     }
+
 }

@@ -4,13 +4,18 @@ import android.util.ArrayMap;
 import android.util.Base64;
 import android.util.Log;
 
-import com.pb.app.fixchat.api.entityV2.User;
+import androidx.annotation.NonNull;
 
+import com.pb.app.fixchat.api.entity.User;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class JSONMethods {
@@ -27,7 +32,11 @@ public class JSONMethods {
         try {
             for (int i = 0; i < parts.length; i++){
                 String[] object = parts[i].split("==");
-                jsonObject.put(object[0], object[1]);
+                if (object[0].equals("role")){
+                    jsonObject.put(object[0], Integer.valueOf(object[1]));
+                } else {
+                    jsonObject.put(object[0], object[1]);
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -44,11 +53,19 @@ public class JSONMethods {
                 String[] object = parts[i].split("\\.");
                 jsonObject.put(object[0], object[1]);
             }
-            jsonObject.put(nameArray, array);
+            ArrayList<JSONMap<String, String>> arrMap = new ArrayList<>();
+            for (String s : array) {
+                JSONMap<String, String> map = new JSONMap<>();
+                map.put("id", s);
+                arrMap.add(map);
+            }
+            jsonObject.put(nameArray, arrMap);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
+        Log.d("REQUEST_JSON", "Create: " + jsonObject.toString()
+                .replace("\\", "").replace("\"[", "[")
+                .replace("]\"", "]"));
         return jsonObject;
     }
 
@@ -80,6 +97,33 @@ public class JSONMethods {
     private static String getJson(String strEncoded) throws UnsupportedEncodingException {
         byte[] decodedBytes = Base64.decode(strEncoded, Base64.URL_SAFE);
         return new String(decodedBytes, "UTF-8");
+    }
+
+    static class JSONMap<K,V> extends HashMap<K,V> {
+
+        @NonNull
+        @Override
+        public String toString() {
+            Iterator<Entry<K,V>> i = entrySet().iterator();
+            if (! i.hasNext())
+                return "{}";
+
+            StringBuilder sb = new StringBuilder();
+            sb.append('{');
+            for (;;) {
+                Entry<K,V> e = i.next();
+                K key = e.getKey();
+                V value = e.getValue();
+                sb.append('"');
+                sb.append(key   == this ? "(this Map)" : key);
+                sb.append('"').append(':').append(' ').append('"');
+                sb.append(value == this ? "(this Map)" : value);
+                sb.append('"');
+                if (! i.hasNext())
+                    return sb.append('}').toString();
+                sb.append(',').append(' ');
+            }
+        }
     }
 }
 

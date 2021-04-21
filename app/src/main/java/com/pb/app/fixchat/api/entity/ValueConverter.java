@@ -1,4 +1,4 @@
-package com.pb.app.fixchat.api.entityV2;
+package com.pb.app.fixchat.api.entity;
 
 import android.util.Log;
 
@@ -35,6 +35,10 @@ public class ValueConverter {
                     server.setDescription(map.get("description"));
                     server.setIp(map.get("ip"));
                     server.setOut_addr(map.get("out_addr"));
+                    if (map.get("is_added") != null){
+                        boolean bool = map.get("is_added").equals("true");
+                        server.setHaveUser(bool);
+                    }
                     servers.add(server);
                 } catch (Exception e) {
                     Log.e("SERVER PARSER", "convertValue: " + e.toString());

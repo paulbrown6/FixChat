@@ -1,0 +1,131 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:background="@drawable/background_dialog">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="15dp"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/search_servers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/field_login"
+                android:ems="10"
+                android:hint="@string/menu_search"
+                android:inputType="textPersonName"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="5dp" />
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_gravity="top"
+                android:background="#AAAAAA" />
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tab_servers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Все" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Выбранные" />
+
+            </com.google.android.material.tabs.TabLayout>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/fui_idp_button_background_google">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/servers_recycle_edit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </ScrollView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button_dialog_servers_cancel"
+                    style="@style/FirebaseUI.VerifyPhoneButton"
+                    android:layout_width="140dp"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="5dp"
+                    android:backgroundTint="#FFFFFF"
+                    android:backgroundTintMode="src_in"
+                    android:fontFamily="@font/roboto"
+                    android:gravity="center"
+                    android:text="@string/cancel"
+                    android:textAlignment="center"
+                    android:textAllCaps="false"
+                    android:textColor="#000000"
+                    android:textSize="11sp"
+                    android:typeface="normal"
+                    tools:ignore="SmallSp" />
+
+                <Button
+                    android:id="@+id/button_dialog_servers_add"
+                    style="@style/FirebaseUI.VerifyPhoneButton"
+                    android:layout_width="140dp"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="5dp"
+                    android:backgroundTint="@color/colorButton"
+                    android:backgroundTintMode="src_in"
+                    android:fontFamily="@font/roboto"
+                    android:gravity="center"
+                    android:text="@string/add"
+                    android:textAlignment="center"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11sp"
+                    android:typeface="normal"
+                    tools:ignore="SmallSp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</FrameLayout>

@@ -1,17 +1,21 @@
 package com.pb.app.fixchat.ui.adapters;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Spinner;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pb.app.fixchat.R;
-import com.pb.app.fixchat.api.entityV2.User;
+import com.pb.app.fixchat.api.entity.User;
+import com.pb.app.fixchat.ui.HomeActivity;
+import com.pb.app.fixchat.ui.fragments.dialogs.DialogAddServers;
+import com.pb.app.fixchat.ui.fragments.dialogs.DialogEditUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +35,48 @@ public class AdapterAdminUser extends RecyclerView.Adapter<AdapterAdminUser.View
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         String userName = contents.get(position).getName();
         String userEmail = contents.get(position).getEmail();
         holder.email.setText(userEmail);
         holder.name.setText(userName);
         holder.type.setChecked(contents.get(position).getRole()==1);
+        holder.settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(HomeActivity.getActivity(), v);
+                if (contents.get(position).getRole()==1){
+                    popup.getMenuInflater()
+                            .inflate(R.menu.popup_menu_user_user, popup.getMenu());
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if (item.getItemId() == R.id.menu_user_edit){
+                                DialogEditUser.getInstance().createAlertDialog(HomeActivity.getActivity(),
+                                        contents.get(position), HomeActivity.getOwner());
+                            }
+                            return true;
+                        }
+                    });
+                } else {
+                    popup.getMenuInflater()
+                            .inflate(R.menu.popup_menu_user_admin, popup.getMenu());
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if (item.getItemId() == R.id.menu_user_edit){
+                                DialogEditUser.getInstance().createAlertDialog(HomeActivity.getActivity(),
+                                        contents.get(position), HomeActivity.getOwner());
+                            } else if (item.getItemId() == R.id.menu_user_servers){
+                                DialogAddServers.getInstance().createAlertDialog(HomeActivity.getActivity(),
+                                        contents.get(position), HomeActivity.getOwner());
+                            }
+                            return true;
+                        }
+                    });
+                }
+
+                popup.show();
+            }
+        });
     }
 
     @Override
@@ -56,20 +96,14 @@ public class AdapterAdminUser extends RecyclerView.Adapter<AdapterAdminUser.View
         TextView email;
         TextView name;
         ToggleButton type;
-        Spinner spinnerSettings;
+        Button settings;
 
         public ViewHolder(View itemView) {
             super(itemView);
             email = itemView.findViewById(R.id.admin_name_user);
             name = itemView.findViewById(R.id.admin_subname_user);
             type = itemView.findViewById(R.id.button_usertype_toggle);
-            spinnerSettings = itemView.findViewById(R.id.admin_user_spinner);
-            spinnerSettings.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    ((TextView)view).setText(null);
-                    }
-                public void onNothingSelected(AdapterView<?> arg0) {}
-            });
+            settings = itemView.findViewById(R.id.admin_user_button);
         }
     }
 }

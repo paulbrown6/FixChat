@@ -2,15 +2,16 @@ package com.pb.app.fixchat.api;
 
 import android.util.ArrayMap;
 import android.util.Log;
+import android.widget.CompoundButton;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.pb.app.fixchat.api.entityV2.ResponseApi;
-import com.pb.app.fixchat.api.entityV2.Server;
-import com.pb.app.fixchat.api.entityV2.ValueConverter;
-import com.pb.app.fixchat.api.entityV2.User;
+import com.pb.app.fixchat.api.entity.ResponseApi;
+import com.pb.app.fixchat.api.entity.Server;
+import com.pb.app.fixchat.api.entity.ValueConverter;
+import com.pb.app.fixchat.api.entity.User;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -21,29 +22,37 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CallV2 {
+public class ApiCall {
 
-    private static CallV2 instance;
+    private static ApiCall instance;
     private static String TAG = "APIv2";
     private static String ACCESS_TOKEN;
     private static String REFRESH_TOKEN;
     private static User user;
+    private static ArrayList<Server> allServers;
+    private static ArrayList<Server> userServers;
 
     private final MutableLiveData<User> signLive = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<Server>> serversLive = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<Server>> userServersLive = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<User>> usersLive = new MutableLiveData<>();
     private final MutableLiveData<Map<String,Server>> serverLive = new MutableLiveData<>();
+    private final MutableLiveData<Map<CompoundButton,Server>> commandLive = new MutableLiveData<>();
     private final MutableLiveData<User> userLive = new MutableLiveData<>();
 
-    public static CallV2 getInstance(){
-        if(instance == null) instance = new CallV2();
+    public static ApiCall getInstance(){
+        if(instance == null) {
+            instance = new ApiCall();
+            allServers = new ArrayList<>();
+            userServers = new ArrayList<>();
+        }
         return instance;
     }
 
     //Call
 
     public void signIn(String email, String password){
-        AppV2.getInstance().getApi().signin(JSONMethods.createRequest(
+        App.getInstance().getApi().signin(JSONMethods.createRequest(
                 "email==" + email + "::password==" + password)
                 .toString()).enqueue(new Callback<ResponseApi>() {
             @Override
@@ -79,7 +88,7 @@ public class CallV2 {
     }
 
     public void refreshToken(String token){
-        AppV2.getInstance().getApi().refresh(JSONMethods.createRequest(
+        App.getInstance().getApi().refresh(JSONMethods.createRequest(
                 "refresh_token==" + token)
                 .toString()).enqueue(new Callback<ResponseApi>() {
             @Override
@@ -114,7 +123,7 @@ public class CallV2 {
     }
 
     public void getServers(){
-        AppV2.getInstance().getApi().getServers("Bearer " + ACCESS_TOKEN).enqueue(new Callback<ResponseApi>() {
+        App.getInstance().getApi().getServers("Bearer " + ACCESS_TOKEN).enqueue(new Callback<ResponseApi>() {
             @Override
             public void onResponse(Call<ResponseApi> call, Response<ResponseApi> response) {
                 if (response.body() != null) {
@@ -125,6 +134,7 @@ public class CallV2 {
                                     getMessage().get("servers"));
                         }
                         serversLive.postValue(servers);
+                        allServers = servers;
                         logMessage(true, "Сервера",
                                 response.body().toString(), response.code());
                     } else {
@@ -149,7 +159,7 @@ public class CallV2 {
     }
 
     public void editServer(@NotNull final Server server, String user, String password){
-        AppV2.getInstance().getApi().editServer("Bearer " + ACCESS_TOKEN,
+        App.getInstance().getApi().editServer("Bearer " + ACCESS_TOKEN,
                 JSONMethods.createRequest("company==" + server.getCompany() + "::description==" + server.getDescription()
                         + "::out_addr==" + server.getOut_addr() + "::user==" + user + "::password==" + password)
                 .toString()).enqueue(new Callback<ResponseApi>() {
@@ -184,7 +194,7 @@ public class CallV2 {
     }
 
     public void deleteServer(String id){
-        AppV2.getInstance().getApi().deleteServer("Bearer " + ACCESS_TOKEN,
+        App.getInstance().getApi().deleteServer("Bearer " + ACCESS_TOKEN,
                 JSONMethods.createRequest("id==" + id)
                         .toString()).enqueue(new Callback<ResponseApi>() {
             @Override
@@ -219,8 +229,8 @@ public class CallV2 {
         });
     }
 
-    public void controlServer(String id, final String command){
-        AppV2.getInstance().getApi().controlServer("Bearer " + ACCESS_TOKEN,
+    public void controlServer(String id, final String command, final CompoundButton button){
+        App.getInstance().getApi().controlServer("Bearer " + ACCESS_TOKEN,
                 JSONMethods.createRequest("server_id==" + id + "::command==" + command)
                         .toString()).enqueue(new Callback<ResponseApi>() {
             @Override
@@ -229,18 +239,22 @@ public class CallV2 {
                     if (response.code() == 200 && response.body().getStatus().equals("ok")){
                         Server server = new Server();
                         server.setState("accepted");
-                        ArrayMap<String, Server> map = new ArrayMap<>();
-                        map.put(command, server);
-                        serverLive.postValue(map);
+                        ArrayMap<CompoundButton, Server> map = new ArrayMap<>();
+                        map.put(button, server);
+                        commandLive.postValue(map);
                         logMessage(true, "Контроль сервера",
                                 response.body().toString(), response.code());
                     } else {
-                        serverLive.postValue(new ArrayMap<String ,Server>());
+                        ArrayMap<CompoundButton, Server> map = new ArrayMap<>();
+                        map.put(button, null);
+                        commandLive.postValue(map);
                         logMessage(false, "Контроль сервера",
                                 response.body().toString(), response.code());
                     }
                 } else {
-                    serverLive.postValue(new ArrayMap<String ,Server>());
+                    ArrayMap<CompoundButton, Server> map = new ArrayMap<>();
+                    map.put(button, null);
+                    commandLive.postValue(map);
                     logMessage(false, "Контроль сервера",
                             response.toString(), response.code());
                 }
@@ -248,15 +262,17 @@ public class CallV2 {
 
             @Override
             public void onFailure(Call<ResponseApi> call, Throwable t) {
+                ArrayMap<CompoundButton, Server> map = new ArrayMap<>();
+                map.put(button, null);
+                commandLive.postValue(map);
                 logMessage(false, "Контроль сервера", "запрос не прошел || " +
                         t.toString(), 0);
-                serverLive.postValue(new ArrayMap<String ,Server>());
             }
         });
     }
 
     public void getUsers(){
-        AppV2.getInstance().getApi().getUsers("Bearer " + ACCESS_TOKEN).enqueue(new Callback<ResponseApi>() {
+        App.getInstance().getApi().getUsers("Bearer " + ACCESS_TOKEN).enqueue(new Callback<ResponseApi>() {
             @Override
             public void onResponse(Call<ResponseApi> call, Response<ResponseApi> response) {
                 if (response.body() != null) {
@@ -287,22 +303,30 @@ public class CallV2 {
     }
 
     public void createUser(@NotNull final User user, String password){
-        AppV2.getInstance().getApi().createUser("Bearer " + ACCESS_TOKEN,
+        App.getInstance().getApi().createUser("Bearer " + ACCESS_TOKEN,
                 JSONMethods.createRequest("name==" + user.getName() + "::company==" + user.getCompany()
                         + "::email==" + user.getEmail() + "::password==" + password + "::role==" + user.getRole())
                         .toString()).enqueue(new Callback<ResponseApi>() {
             @Override
             public void onResponse(Call<ResponseApi> call, Response<ResponseApi> response) {
                 if (response.body() != null) {
-                    if (response.code() == 200 && response.body().getStatus().equals("ok")){
-                        userLive.postValue(user);
+                    if (response.code() == 201 && response.body().getStatus().equals("ok")){
+                        userLive.setValue(user);
                         logMessage(true, "Создание пользователя",
                                 response.body().toString(), response.code());
                     } else {
-                        userLive.postValue(new User());
+                        User user = new User();
+                        user.setState("Ошибка " + response.code());
+                        userLive.setValue(user);
                         logMessage(false, "Создание пользователя",
                                 response.body().toString(), response.code());
                     }
+                }  else {
+                    User user = new User();
+                    user.setState("Ошибка " + response.toString());
+                    userLive.setValue(user);
+                    logMessage(false, "Создание пользователя",
+                        response.toString(), response.code());
                 }
             }
 
@@ -310,13 +334,15 @@ public class CallV2 {
             public void onFailure(Call<ResponseApi> call, Throwable t) {
                 logMessage(false, "Создание пользователя", "запрос не прошел || " +
                         t.toString(), 0);
-                userLive.postValue(new User());
+                User user = new User();
+                user.setState("Запрос не прошел");
+                userLive.setValue(user);
             }
         });
     }
 
     public void editUser(@NotNull final User user, String password){
-        AppV2.getInstance().getApi().editUser("Bearer " + ACCESS_TOKEN,
+        App.getInstance().getApi().editUser("Bearer " + ACCESS_TOKEN,
                 JSONMethods.createRequest("id==" + user.getId() + "::name==" + user.getName() +
                         "::company==" + user.getCompany() + "::email==" + user.getEmail() +
                         "::password==" + password + "::role==" + user.getRole())
@@ -324,15 +350,23 @@ public class CallV2 {
             @Override
             public void onResponse(Call<ResponseApi> call, Response<ResponseApi> response) {
                 if (response.body() != null) {
-                    if (response.code() == 200 && response.body().getStatus().equals("ok")){
-                        userLive.postValue(user);
+                    if (response.code() == 201 && response.body().getStatus().equals("ok")){
+                        userLive.setValue(user);
                         logMessage(true, "Редактирование пользователя",
                                 response.body().toString(), response.code());
                     } else {
-                        userLive.postValue(new User());
+                        User user = new User();
+                        user.setState("Ошибка " + response.code());
+                        userLive.setValue(user);
                         logMessage(false, "Редактирование пользователя",
                                 response.body().toString(), response.code());
                     }
+                }  else {
+                    User user = new User();
+                    user.setState("Ошибка " + response.toString());
+                    userLive.setValue(user);
+                    logMessage(false, "Редактирование пользователя",
+                            response.toString(), response.code());
                 }
             }
 
@@ -340,13 +374,15 @@ public class CallV2 {
             public void onFailure(Call<ResponseApi> call, Throwable t) {
                 logMessage(false, "Редактирование пользователя", "запрос не прошел || " +
                         t.toString(), 0);
-                userLive.postValue(new User());
+                User user = new User();
+                user.setState("Запрос не прошел");
+                userLive.setValue(user);
             }
         });
     }
 
     public void deleteUser(String id){
-        AppV2.getInstance().getApi().deleteUser("Bearer " + ACCESS_TOKEN,
+        App.getInstance().getApi().deleteUser("Bearer " + ACCESS_TOKEN,
                 JSONMethods.createRequest("id==" + id)
                         .toString()).enqueue(new Callback<ResponseApi>() {
             @Override
@@ -376,9 +412,10 @@ public class CallV2 {
     }
 
     public void changeUserServers(String userID, ArrayList<String> serversID){
-        AppV2.getInstance().getApi().changeUserServers("Bearer " + ACCESS_TOKEN,
+        App.getInstance().getApi().changeUserServers("Bearer " + ACCESS_TOKEN,
                 JSONMethods.createRequestArray("user_id." + userID, "servers", serversID)
-                        .toString()).enqueue(new Callback<ResponseApi>() {
+                        .toString().replace("\\", "").replace("\"[", "[")
+                        .replace("]\"", "]")).enqueue(new Callback<ResponseApi>() {
             @Override
             public void onResponse(Call<ResponseApi> call, Response<ResponseApi> response) {
                 if (response.body() != null) {
@@ -393,6 +430,10 @@ public class CallV2 {
                         logMessage(false, "Изменение серверов пользователя",
                                 response.body().toString(), response.code());
                     }
+                } else {
+                    userLive.postValue(new User());
+                    logMessage(false, "Изменение серверов пользователя",
+                            response.toString(), response.code());
                 }
             }
 
@@ -406,7 +447,7 @@ public class CallV2 {
     }
 
     public void getUserServers(String userID){
-        AppV2.getInstance().getApi().getUserServers("Bearer " + ACCESS_TOKEN, userID).enqueue(new Callback<ResponseApi>() {
+        App.getInstance().getApi().getUserServers("Bearer " + ACCESS_TOKEN, userID).enqueue(new Callback<ResponseApi>() {
             @Override
             public void onResponse(Call<ResponseApi> call, Response<ResponseApi> response) {
                 if (response.body() != null) {
@@ -416,16 +457,16 @@ public class CallV2 {
                             servers = ValueConverter.convertValueToServers(response.body().
                                     getMessage().get("servers"));
                         }
-                        serversLive.postValue(servers);
+                        userServersLive.postValue(servers);
                         logMessage(true, "Сервера пользователя",
                                 response.body().toString(), response.code());
                     } else {
-                        serversLive.postValue(new ArrayList<Server>());
+                        userServersLive.postValue(new ArrayList<Server>());
                         logMessage(false, "Сервера пользователя",
                                 response.body().toString(), response.code());
                     }
                 } else {
-                    serversLive.postValue(new ArrayList<Server>());
+                    userServersLive.postValue(new ArrayList<Server>());
                     logMessage(false, "Сервера пользователя",
                             response.toString(), response.code());
                 }
@@ -435,7 +476,7 @@ public class CallV2 {
             public void onFailure(Call<ResponseApi> call, Throwable t) {
                 logMessage(false, "Сервера пользователя", "запрос не прошел || " +
                         t.toString(), 0);
-                serversLive.postValue(new ArrayList<Server>());
+                userServersLive.postValue(new ArrayList<Server>());
             }
         });
     }
@@ -444,8 +485,10 @@ public class CallV2 {
 
     public LiveData<User> getSignState(){return signLive;}
     public LiveData<ArrayList<Server>> getServersState() {return serversLive;}
+    public LiveData<ArrayList<Server>> getUserServersState() {return userServersLive;}
     public LiveData<ArrayList<User>> getUsersState() {return usersLive;}
     public LiveData<Map<String, Server>> getServerState() {return serverLive;}
+    public LiveData<Map<CompoundButton, Server>> getControlState() {return commandLive;}
     public LiveData<User> getUserState() {return userLive;}
 
     private void logMessage(@NotNull Boolean isOk, String method, String message, Integer code){
@@ -469,7 +512,15 @@ public class CallV2 {
         return user;
     }
 
+    public static ArrayList<Server> getAllServers() {
+        return allServers;
+    }
+
+    public static ArrayList<Server> getUserServers() {
+        return userServers;
+    }
+
     public static void clear(){
-        instance = new CallV2();
+        instance = new ApiCall();
     }
 }

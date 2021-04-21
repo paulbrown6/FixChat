@@ -44,6 +44,16 @@
                         android:textColor="@color/black"
                         android:textSize="14sp" />
 
+                    <ProgressBar
+                        android:id="@+id/user_progress_power"
+                        style="@android:style/Widget.DeviceDefault.Light.ProgressBar"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginRight="15dp"
+                        android:visibility="visible" />
+
                     <com.kyleduo.switchbutton.SwitchButton
                         android:id="@+id/user_switch_power"
                         style="@style/MySwitch"
@@ -64,16 +74,6 @@
                         app:kswTextThumbInset="5dp"
                         app:kswThumbDrawable="@drawable/ellipse_switch"
                         app:kswThumbMargin="2dp" />
-
-                    <ProgressBar
-                        android:id="@+id/user_progress_power"
-                        style="@android:style/Widget.DeviceDefault.Light.ProgressBar"
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerInParent="true"
-                        android:layout_marginRight="15dp"
-                        android:visibility="invisible" />
 
                 </RelativeLayout>
 
@@ -109,6 +109,16 @@
                         android:textColor="@color/black"
                         android:textSize="14sp" />
 
+                    <ProgressBar
+                        android:id="@+id/user_progress_web"
+                        style="@android:style/Widget.DeviceDefault.Light.ProgressBar"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginRight="15dp"
+                        android:visibility="visible" />
+
                     <com.kyleduo.switchbutton.SwitchButton
                         android:id="@+id/user_switch_web"
                         style="@style/MySwitch"
@@ -129,16 +139,6 @@
                         app:kswTextThumbInset="5dp"
                         app:kswThumbDrawable="@drawable/ellipse_switch"
                         app:kswThumbMargin="2dp" />
-
-                    <ProgressBar
-                        android:id="@+id/user_progress_web"
-                        style="@android:style/Widget.DeviceDefault.Light.ProgressBar"
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerInParent="true"
-                        android:layout_marginRight="15dp"
-                        android:visibility="invisible" />
 
                 </RelativeLayout>
 

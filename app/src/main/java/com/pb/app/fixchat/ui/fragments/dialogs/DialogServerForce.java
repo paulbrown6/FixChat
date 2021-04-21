@@ -11,9 +11,8 @@ import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 
 import com.pb.app.fixchat.R;
-import com.pb.app.fixchat.api.CallV2;
-import com.pb.app.fixchat.api.RetrofitCall;
-import com.pb.app.fixchat.api.entityV2.Server;
+import com.pb.app.fixchat.api.ApiCall;
+import com.pb.app.fixchat.api.entity.Server;
 
 public class DialogServerForce {
 
@@ -32,7 +31,7 @@ public class DialogServerForce {
         return instance;
     }
 
-    public AlertDialog createAlertDialog(Activity activity, final Server server, final CompoundButton button, final ProgressBar progressBar) {
+    public AlertDialog createAlertDialog(Activity activity, final Server server, final CompoundButton button) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity, R.style.AlertDialogCustom);
         LayoutInflater inflater = activity.getLayoutInflater();
         builder.setView(inflater.inflate(R.layout.dialog_server_force, null)).setCancelable(true);
@@ -41,9 +40,7 @@ public class DialogServerForce {
         alert.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                button.setChecked(!button.isChecked());
                 button.setVisibility(View.VISIBLE);
-                progressBar.setVisibility(View.INVISIBLE);
             }
         });
         checkForce = alert.findViewById(R.id.checkBox_dialog_force);
@@ -59,11 +56,10 @@ public class DialogServerForce {
             @Override
             public void onClick(View v) {
                 if (checkForce.isChecked()){
-                    CallV2.getInstance().controlServer(server.getId(), Server.STOP_POWER_FORCE);
+                    ApiCall.getInstance().controlServer(server.getId(), Server.STOP_POWER_FORCE, button);
                 } else {
-                    CallV2.getInstance().controlServer(server.getId(), Server.STOP_POWER);
+                    ApiCall.getInstance().controlServer(server.getId(), Server.STOP_POWER, button);
                 }
-//                RetrofitCall.getInstance().serverPowerOff(server, force);
                 alert.dismiss();
             }
         });

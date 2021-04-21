@@ -2,7 +2,7 @@ package com.pb.app.fixchat.api.entity;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class TokenEntity {
+public class Token {
 
     @SerializedName("token")
     @Expose

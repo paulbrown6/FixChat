@@ -8,10 +8,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
-import com.pb.app.fixchat.api.CallV2;
-import com.pb.app.fixchat.api.RetrofitCall;
-import com.pb.app.fixchat.api.entity.AuthorisationEntity;
-import com.pb.app.fixchat.api.entityV2.User;
+import com.pb.app.fixchat.api.ApiCall;
+import com.pb.app.fixchat.api.entity.User;
 import com.pb.app.fixchat.data.model.LoggedInUser;
 import com.pb.app.fixchat.R;
 
@@ -31,18 +29,17 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void login(LifecycleOwner owner,String email, String password) {
-//        RetrofitCall.getInstance().authorisation(email, password);
-        CallV2.getInstance().signIn(email, password);
-        CallV2.getInstance().getSignState().observe(owner, new Observer<User>() {
+        ApiCall.getInstance().signIn(email, password);
+        ApiCall.getInstance().getSignState().observe(owner, new Observer<User>() {
             @Override
             public void onChanged(User us) {
                 if (us.getId() != null) {
                     LoggedInUser user =
                             new LoggedInUser(
-                                    CallV2.getRefreshToken(),
+                                    ApiCall.getRefreshToken(),
                                     us.getRole());
                     LoggedInUserView loggedInUserView = new LoggedInUserView(user.getRole());
-                    loggedInUserView.setRefToken(CallV2.getRefreshToken());
+                    loggedInUserView.setRefToken(ApiCall.getRefreshToken());
                     loginResult.setValue(new LoginResult(loggedInUserView));
                 } else {
                     loginResult.setValue(new LoginResult(R.string.login_failed));
@@ -50,23 +47,6 @@ public class LoginViewModel extends ViewModel {
                 Log.d("LOGIN", "User: " + us.toString());
             }
         });
-//        RetrofitCall.getInstance().getAuthorisationState().observe(owner, new Observer<AuthorisationEntity>() {
-//                    @Override
-//                    public void onChanged(AuthorisationEntity authorisationEntity) {
-//                        if (authorisationEntity != null && authorisationEntity.isOk()) {
-//                            LoggedInUser user =
-//                                    new LoggedInUser(
-//                                            authorisationEntity.getTokenEntity().getRefToken(),
-//                                            authorisationEntity.getTokenEntity().getRole());
-//                            LoggedInUserView loggedInUserView = new LoggedInUserView(user.getRole());
-//                            loggedInUserView.setRefToken(authorisationEntity.getTokenEntity().getRefToken());
-//                            loginResult.setValue(new LoginResult(loggedInUserView));
-//                        } else {
-//                            loginResult.setValue(new LoginResult(R.string.login_failed));
-//                        }
-//                        Log.d("LOGIN", "AuthEntity: " + authorisationEntity);
-//                    }
-//                });
     }
 
     public void loginDataChanged(String username, String password) {

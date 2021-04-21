@@ -8,22 +8,27 @@ public class User {
 
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private String id;
     @SerializedName("name")
     @Expose
     private String name;
     @SerializedName("email")
     @Expose
     private String email;
+    @SerializedName("company")
+    @Expose
+    private String company;
     @SerializedName("role")
     @Expose
     private Integer role;
 
-    public Integer getId() {
+    private String state;
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -51,8 +56,25 @@ public class User {
         this.role = role;
     }
 
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
     @NonNull
     public String toString(){
-        return "ID = "+ id + " / Name = " + name + "  / Email = " + email + "  / Role = " + role;
+        return "ID = "+ id + " / Name = " + name + "  / Email = " + email +
+                "  / Company = " + company + "  / Role = " + role;
     }
 }

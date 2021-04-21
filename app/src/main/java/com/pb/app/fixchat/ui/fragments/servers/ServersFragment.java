@@ -13,18 +13,22 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import com.pb.app.fixchat.R;
-import com.pb.app.fixchat.api.CallV2;
-import com.pb.app.fixchat.api.entityV2.Server;
+import com.pb.app.fixchat.api.ApiCall;
+import com.pb.app.fixchat.api.entity.Server;
 import com.pb.app.fixchat.ui.HomeActivity;
 import com.pb.app.fixchat.ui.adapters.AdapterAdminServer;
 import com.pb.app.fixchat.ui.adapters.AdapterUserServer;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class ServersFragment extends Fragment {
 
@@ -45,24 +49,37 @@ public class ServersFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         owner = HomeActivity.getOwner();
         final Activity activity = this.getActivity();
-//        RetrofitCall.getInstance().getServers();
-        CallV2.getInstance().getServers();
-        CallV2.getInstance().getServersState().observe(owner, new Observer<ArrayList<Server>>() {
+        ApiCall.getInstance().getServers();
+        ApiCall.getInstance().getServersState().observe(owner, new Observer<ArrayList<Server>>() {
             @Override
             public void onChanged(ArrayList<Server> servers) {
-                if (CallV2.getUser().getRole() == 1) { adapter = new AdapterAdminServer(servers); }
+                if (ApiCall.getUser().getRole() == 1) { adapter = new AdapterAdminServer(servers); }
                 else {adapter = new AdapterUserServer(servers, activity);}
                 recyclerView.setAdapter(adapter);
             }
         });
-//        RetrofitCall.getInstance().getServersState().observe(owner, new Observer<ServersEntity>(){
-//            @Override
-//            public void onChanged(ServersEntity serversEntity) {
-//                if (RetrofitCall.getRole() == 1) { adapter = new AdapterAdminServer(serversEntity.getServers()); }
-//                else {adapter = new AdapterUserServer(serversEntity.getServers(), activity);}
-//                recyclerView.setAdapter(adapter);
-//            }
-//        });
+        ApiCall.getInstance().getControlState().observe(owner, new Observer<Map<CompoundButton, Server>>() {
+            @Override
+            public void onChanged(Map<CompoundButton, Server> map) {
+                CompoundButton button = null;
+                Server server = null;
+                for (Map.Entry<CompoundButton, Server> entry : map.entrySet()) {
+                    button = entry.getKey();
+                    server = entry.getValue();
+                }
+                if (button.getVisibility() == View.INVISIBLE) {
+                    if (server != null && server.getState().equals("accepted")) {
+                        Log.d("SERVER_COMMAND", "Операция выполнена");
+                        Toast.makeText(activity, "Операция выполнена", Toast.LENGTH_SHORT).show();
+                        button.toggle();
+                    } else {
+                        Log.e("SERVER_COMMAND", "Ошибка на сервере");
+                        Toast.makeText(activity, "Ошибка на сервере", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                button.setVisibility(View.VISIBLE);
+            }
+        });
         return root;
     }
 
